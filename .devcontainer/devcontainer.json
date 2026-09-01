@@ -1,0 +1,31 @@
+{
+  "name": "TRINETRA",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+
+  "postCreateCommand": "pip install -r requirements.txt && python backend/app/db/seed_bulk.py",
+
+  "postAttachCommand": {
+    "server": "python -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000"
+  },
+
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": {
+      "label": "TRINETRA",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  "remoteEnv": {
+    "PYTHONPATH": "${containerWorkspaceFolder}/backend:${containerWorkspaceFolder}/database:${containerWorkspaceFolder}/ai:${containerWorkspaceFolder}/graph",
+    "ENVIRONMENT": "development",
+    "SECRET_KEY": "codespace-dev-key-regenerated-per-container-do-not-reuse",
+    "DATABASE_URL": "sqlite:///./trinetra.db"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python"]
+    }
+  }
+}

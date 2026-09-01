@@ -1,0 +1,51 @@
+# Optional services for TRINETRA.
+#
+# The platform runs with neither of these: it defaults to SQLite and the
+# in-process graph engine. Bring these up only when you want PostgreSQL and
+# real Neo4j, then point .env at them.
+#
+#   docker compose up -d
+#   # then in .env:
+#   #   DATABASE_URL=postgresql+psycopg://trinetra:trinetra@localhost:5432/trinetra
+#   #   GRAPH_BACKEND=neo4j
+#   #   NEO4J_PASSWORD=trinetra_dev_password
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: trinetra-postgres
+    environment:
+      POSTGRES_USER: trinetra
+      POSTGRES_PASSWORD: trinetra
+      POSTGRES_DB: trinetra
+    ports:
+      - "5432:5432"
+    volumes:
+      - trinetra-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trinetra"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: trinetra-neo4j
+    environment:
+      # Change this before any non-local use.
+      NEO4J_AUTH: neo4j/trinetra_dev_password
+      NEO4J_server_memory_heap_max__size: 1G
+    ports:
+      - "7474:7474"   # HTTP browser
+      - "7687:7687"   # Bolt
+    volumes:
+      - trinetra-neo4jdata:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  trinetra-pgdata:
+  trinetra-neo4jdata:

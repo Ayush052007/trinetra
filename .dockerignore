@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.git/
+.claude/
+.env
+CREDENTIALS.md
+*.db
+*.db-wal
+*.db-shm
+uploads/
+tests/
+legacy-prototype/
+docs/reference/

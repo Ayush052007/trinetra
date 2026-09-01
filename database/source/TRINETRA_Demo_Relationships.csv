@@ -1,0 +1,17 @@
+relationship_id,from_entity,relationship,to_entity,evidence_type,confidence,time,source
+R001,V1,complaint_filed_against,S1,observed,1.0,Day 1,Case FIR text
+R002,S1,registered_owner_of,PH1,observed,1.0,Day 15,Telecom subscriber record
+R003,S1,believed_to_use,PH2,inferred,0.78,Day 15,Call-pattern correlation + SIM purchase
+R004,PH2,purchased_via,TXN1,observed,1.0,Day 15,SIM purchase record
+R005,TXN1,id_proof_matches,S1,observed,0.95,Day 15,Telecom retailer KYC
+R006,S1,alias_of,S2,inferred,0.87,Day 16,Entity-resolution match
+R007,S2,named_accused_in,CASE_PRIOR,observed,1.0,Day 16,Prior FIR
+R008,S1,registered_owner_of,VEH1,observed,1.0,Day 15,RC records
+R009,VEH1,sighted_at,LOC1,observed,0.9,Day 9,Surveillance/case record
+R010,VEH1,sighted_at,LOC3,observed,0.92,Day 14,Case/witness record
+R011,V1,resides_at,LOC1,observed,1.0,Day 1,Case FIR text
+R012,V1,commutes_to,LOC2,observed,1.0,Day 9,Victim statement
+R013,LOC3,location_of,EVT2,observed,1.0,Day 14,Case FIR text
+R014,W1,witnessed,EVT2,observed,1.0,Day 14,Witness statement
+R015,SOC1,sent_messages_to,V1,observed,1.0,Day 1-14,Platform metadata
+R016,SOC1,linked_by_metadata_to,PH2,inferred,0.71,Day 15,Platform metadata + call correlation

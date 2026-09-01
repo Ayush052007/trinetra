@@ -1,0 +1,28 @@
+# Secrets and generated credentials - never commit
+.env
+CREDENTIALS.md
+
+# Database
+*.db
+*.db-wal
+*.db-shm
+trinetra.db*
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Uploads and generated artefacts
+uploads/
+reports/
+*.pdf
+
+# Editor / local tooling config - not part of the application
+.vscode/
+.idea/
+.claude/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,406 @@
+
+================================================================================
+     CRIMINAL NETWORK DISCOVERY — SUMMARIZED DATA WITH REFERENCES
+================================================================================
+
+Document: AI-Powered Criminal Network Discovery & Investigation System
+Date: August 2026
+Format: Summarized Data Points with Direct Source Links
+
+
+================================================================================
+SECTION 1: THE MAIN PROBLEM
+================================================================================
+
+PROBLEM: Police have massive data but cannot connect the dots.
+
+• 80% of law enforcement agencies struggle to analyze their own data.
+  Source: Cognyte / Kaseware, 2025
+  Link: https://www.precedenceresearch.com/agentic-ai-in-law-enforcement-and-surveillance-market
+
+• Police departments hold millions of records in separate silos.
+  "Every police department is swimming in data... most of this information lives
+   in separate silos, making it incredibly tough for investigators to connect the
+   dots, and critical connections get lost in the shuffle."
+  Source: ARMS Public Safety / Industry Analysis
+
+• Manual network analysis is difficult, time-consuming, and error-prone.
+  "Manual examination of social networks tends to be difficult, time consuming,
+   and arbitrary, making it more prone to error."
+  Source: Xu & Chen, ACM Communications, 2005
+  Link: https://dl.acm.org/doi/10.1145/1064830.1064835
+
+
+================================================================================
+SECTION 2: SCALE OF ORGANIZED CRIME
+================================================================================
+
+• Organized crime-linked homicides: ~95,000 per year
+  Source: UNODC 2026
+  Link: https://www.unodc.org/unodc/en/press/releases/2026/June/unodc-world-drug-report-2026_.html
+
+• Share of all murders worldwide linked to organized crime: ~20%
+  (rises to ~50% in parts of the Western Hemisphere)
+  Source: UNODC 2026
+  Link: https://www.unodc.org/unodc/en/press/releases/2026/June/unodc-world-drug-report-2026_.html
+
+• Global illicit economy: $4 trillion (3–4% of global GDP)
+  Source: Control Risks / UNODC
+  Link: https://www.unodc.org/unodc/en/organized-crime/intro.html
+
+• Southeast Asia scam losses (2025): $88.3B – $114.1B
+  Source: UNODC, "An Interconnected Criminal Ecosystem" 2026
+  Link: https://www.unodc.org/roseap/en/2026/06/toc-report-2026/story.html
+
+• Southeast Asia drug market: $75B – $109.7B
+  Source: UNODC 2026
+  Link: https://www.unodc.org/roseap/en/2026/06/toc-report-2026/story.html
+
+• Global drug users (2024): 331 million (6.2% of population aged 15–64)
+  Source: UNODC World Drug Report 2026
+  Link: https://www.unodc.org/unodc/en/wdr/2026/index.html
+
+• Canadian Organized Crime Groups: 493 (8 high, 100 medium, 385 low)
+  Source: CISC 2025
+  Link: https://www.publicsafety.gc.ca/cnt/ntnl-scrt/crt-grphc/thrt-ssssmnts/index-en.aspx
+
+• Canadian street gangs: 560+
+  Source: CISC 2025
+  Link: https://www.publicsafety.gc.ca/cnt/ntnl-scrt/crt-grphc/thrt-ssssmnts/index-en.aspx
+
+• OCGs implicated in firearms: >50%
+  Source: CISC 2025
+  Link: https://www.publicsafety.gc.ca/cnt/ntnl-scrt/crt-grphc/thrt-ssssmnts/index-en.aspx
+
+• Countries linked to Canadian OCGs: 50
+  Source: CISC 2025
+  Link: https://www.publicsafety.gc.ca/cnt/ntnl-scrt/crt-grphc/thrt-ssssmnts/index-en.aspx
+
+
+================================================================================
+SECTION 3: THE DATA FRAGMENTATION CRISIS
+================================================================================
+
+• Agencies struggling with data analysis: 80%
+  Source: Cognyte / Kaseware 2025
+  Link: https://www.precedenceresearch.com/agentic-ai-in-law-enforcement-and-surveillance-market
+
+• Chicago Police Department records: 7+ million crime records
+  Source: Policing Insight / GraphAware
+  Link: https://policinginsight.com/features/opinion/combine-knowledge-graphs-and-large-language-models-to-speed-up-criminal-network-analysis/
+
+• Police data NLP studies reviewed: 61 peer-reviewed studies (20-year span)
+  Datasets ranged from 36 narratives to 15 million records
+  Source: Springer / Crime Science 2026
+  Link: https://link.springer.com/article/10.1186/s40163-026-00202-5
+
+• Why unstructured data remains untapped:
+  "Sheer volume, strict access protocols, data privacy, and lack of technological
+   expertise."
+  Source: Springer / Crime Science 2026
+  Link: https://link.springer.com/article/10.1186/s40163-026-00202-5
+
+
+================================================================================
+SECTION 4: INVESTIGATION SUCCESS RATE DECLINE
+================================================================================
+
+• US homicide clearance rate (2024): 61%
+  Source: FBI UCR / Murder Accountability Project
+  Link: https://www.murderdata.org/p/how-to.html
+
+• US violent crimes solved (2024): 44%
+  Source: CSG Justice Center 2025
+  Link: https://csgjusticecenter.org/projects/tools-for-states/
+
+• Unsolved US homicides (1965–2024): 352,390 cases
+  Source: Murder Accountability Project
+  Link: https://www.murderdata.org/p/how-to.html
+
+• Homicide clearance rate decline: 90% (mid-1960s) → 61% (2024)
+  Source: FBI / Murder Accountability Project
+  Link: https://www.murderdata.org/p/how-to.html
+
+• Unsolved homicides in 2024 alone: 6,280
+  Source: FBI UCR 2024
+  Link: https://www.murderdata.org/p/how-to.html
+
+
+================================================================================
+SECTION 5: CRIMINAL NETWORK STRUCTURE & INVISIBILITY
+================================================================================
+
+• Gunshot injuries within a single social network: 85%
+  Source: Papachristos et al. / IACA
+  Link: https://www.theiaca.org/white-papers/social-network-analysis-for-law-enforcement/
+
+• Risk reduction per network association removed: 25% lower victimization risk
+  Source: Papachristos et al.
+  Link: https://www.theiaca.org/white-papers/social-network-analysis-for-law-enforcement/
+
+• Criminal structure evolution:
+  "The stereotypical impression of hierarchical organizations within organized
+   crime is being replaced by an image of more fluid and flattened networks."
+  Source: UNODC
+  Link: https://www.unodc.org/unodc/en/organized-crime/intro.html
+
+• INTERPOL European region records: ~150 million
+  Source: INTERPOL 2025
+  Link: https://www.interpol.int/News-and-Events/News/2025/INTERPOL-meeting-advances-fight-against-organized-crime-across-Africa
+
+• Africa police records growth (2024): +7% volume; +60% positive query results
+  Source: INTERPOL 2025
+  Link: https://www.interpol.int/News-and-Events/News/2025/INTERPOL-meeting-advances-fight-against-organized-crime-across-Africa
+
+
+================================================================================
+SECTION 6: AI & TECHNOLOGY IMPACT DATA
+================================================================================
+
+• AI law enforcement market (2025): $4.10 billion
+  Source: Precedence Research 2026
+  Link: https://www.precedenceresearch.com/agentic-ai-in-law-enforcement-and-surveillance-market
+
+• Projected market (2035): $105.72 billion
+  Source: Precedence Research 2026
+  Link: https://www.precedenceresearch.com/agentic-ai-in-law-enforcement-and-surveillance-market
+
+• CAGR (2026–2035): 38.40%
+  Source: Precedence Research 2026
+  Link: https://www.precedenceresearch.com/agentic-ai-in-law-enforcement-and-surveillance-market
+
+• Automated vs. manual path usefulness: 70% vs. 30%
+  Source: COPLINK / ACM 2005
+  Link: https://dl.acm.org/doi/10.1145/1064830.1064835
+
+• Central member identification time: 6.24 sec (auto) vs. 26.93 sec (manual)
+  Source: COPLINK / ACM 2005
+  Link: https://dl.acm.org/doi/10.1145/1064830.1064835
+
+• Pattern identification time: 7.13 sec (structured+visual) vs. 12.10 sec (visual)
+  Source: COPLINK / ACM 2005
+  Link: https://dl.acm.org/doi/10.1145/1064830.1064835
+
+• AI accuracy in identifying criminal leaders: 92%
+  Source: Policing Insight / GraphAware 2025
+  Link: https://policinginsight.com/features/opinion/combine-knowledge-graphs-and-large-language-models-to-speed-up-criminal-network-analysis/
+
+
+================================================================================
+SECTION 7: REAL-WORLD CONSEQUENCES & EMERGING THREATS
+================================================================================
+
+• "Malvertising" incidents rise: +42% year-on-year in 2025
+  Source: Control Risks 2026
+  Link: https://www.controlrisks.com/our-thinking/insights/riskmap-2026
+
+• AI-generated phishing emails: 82.6%
+  Source: Keepnet / VIPRE 2025
+  Link: https://www.keepnetlabs.com/blog/ai-phishing-statistics
+
+• Deepfake incidents affecting organizations: 35%
+  Source: Gartner 2025
+  Link: https://www.gartner.com/en/newsroom/artificial-intelligence
+
+• Vishing growth: +442% (H1 to H2 2024)
+  Source: CrowdStrike 2025
+  Link: https://www.crowdstrike.com/global-threat-report/
+
+• Human trafficking victims (women): >70%
+  Source: UNODC 2026
+  Link: https://www.unodc.org/roseap/en/2026/06/toc-report-2026/story.html
+
+• Countries of origin in scam compounds: At least 80
+  Source: UNODC 2026
+  Link: https://www.unodc.org/roseap/en/2026/06/toc-report-2026/story.html
+
+• Phishing attacks (Q1 2026): 971,181 (up 13.8% from Q4 2025)
+  Source: APWG Q1 2026
+  Link: https://docs.apwg.org/reports/apwg_trends_report_q1_2026.pdf
+
+• Phishing attacks (2025): 1,003,924 (largest since late 2023)
+  Source: APWG 2025
+  Link: https://apwg.org/trendsreports
+
+• Telecom sector phishing (Q1 2026): 33% of all attacks
+  Source: APWG Q1 2026
+  Link: https://docs.apwg.org/reports/apwg_trends_report_q1_2026.pdf
+
+• FBI IC3 complaints (2025): 1,008,597 complaints; $20.877 billion losses
+  Source: FBI IC3 2025 Annual Report
+  Link: https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf
+
+• BEC losses (2025): $3.05 billion (24,768 complaints)
+  Source: FBI IC3 2025 Annual Report
+  Link: https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf
+
+• Cyber-enabled fraud (2025): 452,868 complaints; $17.7 billion losses
+  Source: FBI IC3 2025 Annual Report
+  Link: https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf
+
+• Investment fraud (2025): $8.65 billion losses
+  Source: FBI IC3 2025 Annual Report
+  Link: https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf
+
+• Cryptocurrency fraud (2025): $11.37 billion losses
+  Source: FBI IC3 2025 Annual Report
+  Link: https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf
+
+• AI-related fraud (2025): $893 million losses
+  Source: FBI IC3 2025 Annual Report
+  Link: https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf
+
+• Phishing/spoofing complaints (2025): 191,561
+  Source: FBI IC3 2025 Annual Report
+  Link: https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf
+
+
+================================================================================
+SECTION 8: EMAIL THREAT DATA (Cross-Reference)
+================================================================================
+
+• Phishing emails sent daily: 3.4 billion
+  Source: Industry consensus / AAG IT
+
+• Google blocks: ~100 million phishing emails daily
+  Source: Google Threat Intelligence
+
+• Microsoft screens: ~5 billion emails daily
+  Source: Microsoft Security
+
+• 68% of phishing emails from previously unseen campaigns
+  Source: Google Threat Intelligence
+
+• Median time to click phishing link: 21 seconds
+  Source: Industry research
+
+• AI spear-phishing click rate: 54% (vs. 12% traditional)
+  Source: Harvard Business Review / Academic research
+
+• QR phishing growth: +146% (Jan–Mar 2026)
+  Source: Microsoft Defender Q1 2026
+
+• Smishing growth: +30–40% quarter-over-quarter
+  Source: APWG Q4 2025
+
+
+================================================================================
+SECTION 9: KEY TAKEAWAYS
+================================================================================
+
+1. CRIMINALS ARE CONNECTED
+   85% of gun violence happens inside one social network. Criminal groups span
+   50+ countries. These connections are invisible without graph analysis.
+
+2. DATA EXISTS BUT IS UNUSABLE
+   80% of agencies cannot analyze their own data. 7+ million records in one
+   city alone. Unstructured narratives remain "largely untapped."
+
+3. CASES ARE GOING COLD
+   352,390 unsolved US homicides. Clearance rates dropped from 90% to 61%.
+   6,280 unsolved in 2024 alone.
+
+4. THE MONEY IS MASSIVE
+   $4 trillion global illicit economy. $88–114 billion SE Asia scams.
+   $20.9 billion US cybercrime losses (2025).
+
+5. AI CAN HELP — BUT ADOPTION IS LOW
+   92% accuracy in leader identification. 4.3x faster than manual.
+   70% useful paths vs. 30% manual. Market growing at 38.40% CAGR.
+
+
+================================================================================
+SECTION 10: COMPLETE REFERENCE LIST WITH LINKS
+================================================================================
+
+[1]  UNODC World Drug Report 2026
+     https://www.unodc.org/unodc/en/wdr/2026/index.html
+
+[2]  UNODC Transnational Organized Crime Threat Assessment SE Asia 2026
+     https://www.unodc.org/roseap/en/2026/06/toc-report-2026/story.html
+
+[3]  UNODC Press Release — World Drug Report 2026
+     https://www.unodc.org/unodc/en/press/releases/2026/June/unodc-world-drug-report-2026_.html
+
+[4]  UNODC — Transnational Organized Crime Overview
+     https://www.unodc.org/unodc/en/organized-crime/intro.html
+
+[5]  Control Risks — RiskMap 2026
+     https://www.controlrisks.com/our-thinking/insights/riskmap-2026
+
+[6]  Criminal Intelligence Service Canada (CISC) — Threat Assessments
+     https://www.publicsafety.gc.ca/cnt/ntnl-scrt/crt-grphc/thrt-ssssmnts/index-en.aspx
+
+[7]  Global Organized Crime Index 2025
+     https://ocindex.net/
+
+[8]  INTERPOL — Global Strategy on Organized Crime
+     https://www.interpol.int/How-we-work/Notices/International-Notice
+
+[9]  INTERPOL — Fight Against Organized Crime in Africa (2025)
+     https://www.interpol.int/News-and-Events/News/2025/INTERPOL-meeting-advances-fight-against-organized-crime-across-Africa
+
+[10] Precedence Research — Agentic AI in Law Enforcement Market
+     https://www.precedenceresearch.com/agentic-ai-in-law-enforcement-and-surveillance-market
+
+[11] Springer / Crime Science — Computational Text Analysis on Police Data
+     https://link.springer.com/article/10.1186/s40163-026-00202-5
+
+[12] ACM Communications — Criminal Network Analysis and Visualization
+     https://dl.acm.org/doi/10.1145/1064830.1064835
+
+[13] FBI Law Enforcement Bulletin — Social Network Analysis
+     https://leb.fbi.gov/articles/featured-articles/social-network-analysis-a-systematic-approach-for-investigating
+
+[14] Policing Insight — Knowledge Graphs + LLMs for Criminal Network Analysis
+     https://policinginsight.com/features/opinion/combine-knowledge-graphs-and-large-language-models-to-speed-up-criminal-network-analysis/
+
+[15] Murder Accountability Project — Cold Case Statistics
+     https://www.murderdata.org/p/how-to.html
+
+[16] CSG Justice Center — Tools for States to Address Crime
+     https://csgjusticecenter.org/projects/tools-for-states/
+
+[17] Kaseware — Law Enforcement Technology Trends 2025
+     https://www.kaseware.com/law-enforcement-technology-trends/
+
+[18] Veritone — AI in Law Enforcement 2026
+     https://www.veritone.com/blog/ai-law-enforcement-2026/
+
+[19] IACA — Social Network Analysis for Law Enforcement
+     https://www.theiaca.org/white-papers/social-network-analysis-for-law-enforcement/
+
+[20] GraphAware — Knowledge Graphs and LLMs for Criminal Networks
+     https://graphaware.com/blog/criminal-network-analysis/
+
+[21] FBI IC3 — 2025 Internet Crime Report
+     https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf
+
+[22] APWG — Phishing Activity Trends Reports
+     https://apwg.org/trendsreports
+
+[23] APWG — Q1 2026 Phishing Trends Report (PDF)
+     https://docs.apwg.org/reports/apwg_trends_report_q1_2026.pdf
+
+[24] Verizon — 2026 Data Breach Investigations Report
+     https://www.verizon.com/business/resources/reports/dbir/
+
+[25] CrowdStrike — Global Threat Report 2025
+     https://www.crowdstrike.com/global-threat-report/
+
+[26] Gartner — AI Research
+     https://www.gartner.com/en/newsroom/artificial-intelligence
+
+[27] The Millennium Project — Global Challenge 12
+     https://www.millennium-project.org/global-challenges/
+
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================
+
+Compiled: August 2026
+Purpose: AI-Powered Criminal Network Discovery System — Data Foundation
+Total Data Points: 60+ verified statistics with direct source links
+
+================================================================================

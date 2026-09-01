@@ -1,0 +1,608 @@
+{
+  "case_id": "DEMO/WS-2026-0417",
+  "status": "synthetic_demo_only",
+  "metadata": {
+    "title": "Integrated Women Safety + Criminal Network Demo Case",
+    "data_classification": "Synthetic / fictional",
+    "purpose": "Testing entity extraction, entity resolution, knowledge graph, relationship analysis, risk analytics, women safety workflows and reporting."
+  },
+  "entities": [
+    {
+      "id": "V1",
+      "type": "person",
+      "role": "victim",
+      "alias": "A. Sharma",
+      "name": "Victim V1",
+      "source": "Case FIR text"
+    },
+    {
+      "id": "S1",
+      "type": "person",
+      "role": "suspect_primary",
+      "alias": "R. Verma",
+      "name": "Primary Suspect S1",
+      "source": "Case FIR text; RC records"
+    },
+    {
+      "id": "S2",
+      "type": "person",
+      "role": "linked_identity",
+      "alias": "S. Mehta",
+      "name": "Linked Identity S2",
+      "source": "Prior FIR; entity resolution"
+    },
+    {
+      "id": "W1",
+      "type": "person",
+      "role": "witness",
+      "alias": "W1",
+      "name": "Witness W1",
+      "source": "Case FIR text"
+    },
+    {
+      "id": "PH1",
+      "type": "phone",
+      "value": "+91-98xxxx1123",
+      "registered": true,
+      "source": "Telecom subscriber record"
+    },
+    {
+      "id": "PH2",
+      "type": "phone",
+      "value": "+91-70xxxx4482",
+      "registered": false,
+      "source": "Call detail records"
+    },
+    {
+      "id": "SOC1",
+      "type": "social_handle",
+      "value": "@user_4471",
+      "source": "Platform metadata; authorized request"
+    },
+    {
+      "id": "VEH1",
+      "type": "vehicle",
+      "value": "DL-0X-XX-4471",
+      "source": "RTO / RC records"
+    },
+    {
+      "id": "TXN1",
+      "type": "transaction",
+      "value": "SIM purchase record",
+      "source": "Telecom retailer KYC record"
+    },
+    {
+      "id": "LOC1",
+      "type": "location",
+      "value": "Victim residence (NW Delhi locality)",
+      "source": "Case FIR text"
+    },
+    {
+      "id": "LOC2",
+      "type": "location",
+      "value": "Victim workplace",
+      "source": "Case FIR text"
+    },
+    {
+      "id": "LOC3",
+      "type": "location",
+      "value": "Confrontation site",
+      "source": "Witness statement"
+    },
+    {
+      "id": "EVT2",
+      "type": "event",
+      "value": "Escalation incident, Day 14",
+      "source": "Case FIR text"
+    },
+    {
+      "id": "CASE_PRIOR",
+      "type": "case",
+      "value": "Prior stalking FIR, other district, 2024",
+      "source": "Cross-district FIR database"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "R001",
+      "from": "V1",
+      "relationship": "complaint_filed_against",
+      "to": "S1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 1",
+      "source": "Case FIR text"
+    },
+    {
+      "id": "R002",
+      "from": "S1",
+      "relationship": "registered_owner_of",
+      "to": "PH1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 15",
+      "source": "Telecom subscriber record"
+    },
+    {
+      "id": "R003",
+      "from": "S1",
+      "relationship": "believed_to_use",
+      "to": "PH2",
+      "evidence_type": "inferred",
+      "confidence": 0.78,
+      "time": "Day 15",
+      "source": "Call-pattern correlation + SIM purchase"
+    },
+    {
+      "id": "R004",
+      "from": "PH2",
+      "relationship": "purchased_via",
+      "to": "TXN1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 15",
+      "source": "SIM purchase record"
+    },
+    {
+      "id": "R005",
+      "from": "TXN1",
+      "relationship": "id_proof_matches",
+      "to": "S1",
+      "evidence_type": "observed",
+      "confidence": 0.95,
+      "time": "Day 15",
+      "source": "Telecom retailer KYC"
+    },
+    {
+      "id": "R006",
+      "from": "S1",
+      "relationship": "alias_of",
+      "to": "S2",
+      "evidence_type": "inferred",
+      "confidence": 0.87,
+      "time": "Day 16",
+      "source": "Entity-resolution match"
+    },
+    {
+      "id": "R007",
+      "from": "S2",
+      "relationship": "named_accused_in",
+      "to": "CASE_PRIOR",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 16",
+      "source": "Prior FIR"
+    },
+    {
+      "id": "R008",
+      "from": "S1",
+      "relationship": "registered_owner_of",
+      "to": "VEH1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 15",
+      "source": "RC records"
+    },
+    {
+      "id": "R009",
+      "from": "VEH1",
+      "relationship": "sighted_at",
+      "to": "LOC1",
+      "evidence_type": "observed",
+      "confidence": 0.9,
+      "time": "Day 9",
+      "source": "Surveillance/case record"
+    },
+    {
+      "id": "R010",
+      "from": "VEH1",
+      "relationship": "sighted_at",
+      "to": "LOC3",
+      "evidence_type": "observed",
+      "confidence": 0.92,
+      "time": "Day 14",
+      "source": "Case/witness record"
+    },
+    {
+      "id": "R011",
+      "from": "V1",
+      "relationship": "resides_at",
+      "to": "LOC1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 1",
+      "source": "Case FIR text"
+    },
+    {
+      "id": "R012",
+      "from": "V1",
+      "relationship": "commutes_to",
+      "to": "LOC2",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 9",
+      "source": "Victim statement"
+    },
+    {
+      "id": "R013",
+      "from": "LOC3",
+      "relationship": "location_of",
+      "to": "EVT2",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 14",
+      "source": "Case FIR text"
+    },
+    {
+      "id": "R014",
+      "from": "W1",
+      "relationship": "witnessed",
+      "to": "EVT2",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 14",
+      "source": "Witness statement"
+    },
+    {
+      "id": "R015",
+      "from": "SOC1",
+      "relationship": "sent_messages_to",
+      "to": "V1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 1-14",
+      "source": "Platform metadata"
+    },
+    {
+      "id": "R016",
+      "from": "SOC1",
+      "relationship": "linked_by_metadata_to",
+      "to": "PH2",
+      "evidence_type": "inferred",
+      "confidence": 0.71,
+      "time": "Day 15",
+      "source": "Platform metadata + call correlation"
+    }
+  ],
+  "incidents": [
+    {
+      "incident_id": "WSI-001",
+      "case_id": "DEMO/WS-2026-0417",
+      "type": "harassment",
+      "time": "Day 1",
+      "location": "LOC1",
+      "priority": "HIGH",
+      "status": "open",
+      "subject_entity": "V1",
+      "description": "Repeated unwanted calls/messages from unknown number."
+    },
+    {
+      "incident_id": "WSI-002",
+      "case_id": "DEMO/WS-2026-0417",
+      "type": "stalking",
+      "time": "Day 9",
+      "location": "LOC1\u2192LOC2",
+      "priority": "HIGH",
+      "status": "investigating",
+      "subject_entity": "V1",
+      "description": "Victim reports being followed on commute; VEH1 sighted near LOC1."
+    },
+    {
+      "incident_id": "WSI-003",
+      "case_id": "DEMO/WS-2026-0417",
+      "type": "assault_or_confrontation",
+      "time": "Day 14",
+      "location": "LOC3",
+      "priority": "CRITICAL",
+      "status": "escalated",
+      "subject_entity": "V1",
+      "description": "In-person confrontation witnessed by W1; VEH1 sighted at scene."
+    },
+    {
+      "incident_id": "WSI-004",
+      "case_id": "CASE_PRIOR",
+      "type": "stalking",
+      "time": "2024",
+      "location": "OTHER_DISTRICT",
+      "priority": "HIGH",
+      "status": "historical",
+      "subject_entity": "S2",
+      "description": "Prior stalking FIR; linked to S1 through entity resolution."
+    },
+    {
+      "incident_id": "WSI-005",
+      "case_id": "DEMO/WS-2026-0417",
+      "type": "suspicious_contact",
+      "time": "Day 6",
+      "location": "LOC2",
+      "priority": "MEDIUM",
+      "status": "review",
+      "subject_entity": "V1",
+      "description": "Repeated digital/contact signal associated with PH2."
+    },
+    {
+      "incident_id": "WSI-006",
+      "case_id": "DEMO/WS-2026-0417",
+      "type": "suspicious_vehicle",
+      "time": "Day 12",
+      "location": "LOC1",
+      "priority": "MEDIUM",
+      "status": "review",
+      "subject_entity": "VEH1",
+      "description": "Same synthetic vehicle identifier observed again near residence."
+    }
+  ],
+  "events": [
+    {
+      "event_id": "E001",
+      "time": "Day 1",
+      "entity": "V1",
+      "type": "complaint",
+      "location": "LOC1",
+      "description": "Initial complaint of repeated unwanted calls/messages."
+    },
+    {
+      "event_id": "E002",
+      "time": "Day 2",
+      "entity": "PH2",
+      "type": "communication",
+      "location": "LOC1",
+      "description": "Synthetic repeated call/message activity begins review window."
+    },
+    {
+      "event_id": "E003",
+      "time": "Day 6",
+      "entity": "SOC1",
+      "type": "communication",
+      "location": "LOC2",
+      "description": "Synthetic social-media message observed."
+    },
+    {
+      "event_id": "E004",
+      "time": "Day 9",
+      "entity": "V1",
+      "type": "stalking_report",
+      "location": "LOC1\u2192LOC2",
+      "description": "Victim reports being followed during commute."
+    },
+    {
+      "event_id": "E005",
+      "time": "Day 9",
+      "entity": "VEH1",
+      "type": "vehicle_sighting",
+      "location": "LOC1",
+      "description": "Vehicle sighted near victim residence."
+    },
+    {
+      "event_id": "E006",
+      "time": "Day 12",
+      "entity": "VEH1",
+      "type": "vehicle_sighting",
+      "location": "LOC1",
+      "description": "Second synthetic sighting near residence."
+    },
+    {
+      "event_id": "E007",
+      "time": "Day 14",
+      "entity": "EVT2",
+      "type": "confrontation",
+      "location": "LOC3",
+      "description": "In-person confrontation; witness W1 present."
+    },
+    {
+      "event_id": "E008",
+      "time": "Day 14",
+      "entity": "VEH1",
+      "type": "vehicle_sighting",
+      "location": "LOC3",
+      "description": "Same vehicle sighted at confrontation site."
+    },
+    {
+      "event_id": "E009",
+      "time": "Day 15",
+      "entity": "TXN1",
+      "type": "sim_purchase",
+      "location": "telecom_retailer",
+      "description": "SIM purchase tied to S1 ID proof."
+    },
+    {
+      "event_id": "E010",
+      "time": "Day 15",
+      "entity": "PH2",
+      "type": "entity_link",
+      "location": "system",
+      "description": "PH2 flagged as believed-to-use by S1."
+    },
+    {
+      "event_id": "E011",
+      "time": "Day 16",
+      "entity": "S1",
+      "type": "entity_resolution",
+      "location": "system",
+      "description": "S1 \u2194 S2 alias match surfaced."
+    },
+    {
+      "event_id": "E012",
+      "time": "Day 16",
+      "entity": "S1",
+      "type": "risk_update",
+      "location": "system",
+      "description": "S1 assigned HIGH analytical risk/priority."
+    }
+  ],
+  "risk_analysis": [
+    {
+      "entity": "S1",
+      "score": 0.91,
+      "level": "HIGH",
+      "reason": "Repeat-offender pattern match; escalation trend across 14 days; alias link to prior stalking FIR.",
+      "status": "inferred/analytical"
+    },
+    {
+      "entity": "S2",
+      "score": 0.72,
+      "level": "HIGH",
+      "reason": "Linked to S1 through 0.87 alias-resolution match and prior case association.",
+      "status": "inferred/analytical"
+    },
+    {
+      "entity": "PH2",
+      "score": 0.64,
+      "level": "MEDIUM",
+      "reason": "Unregistered number; call-pattern correlation; SIM purchase linkage.",
+      "status": "inferred/analytical"
+    },
+    {
+      "entity": "VEH1",
+      "score": 0.59,
+      "level": "MEDIUM",
+      "reason": "Observed near LOC1 twice and LOC3 once.",
+      "status": "analytical"
+    }
+  ],
+  "alerts": [
+    {
+      "alert_id": "A001",
+      "priority": "HIGH",
+      "module": "Women Safety",
+      "message": "Potential repeated-encounter pattern involving VEH1",
+      "time": "Day 9-14",
+      "status": "UNDER_REVIEW"
+    },
+    {
+      "alert_id": "A002",
+      "priority": "CRITICAL",
+      "module": "Women Safety",
+      "message": "Escalation event at LOC3 with witness W1",
+      "time": "Day 14",
+      "status": "ESCALATED"
+    },
+    {
+      "alert_id": "A003",
+      "priority": "HIGH",
+      "module": "Network",
+      "message": "Potential hidden link S1 \u2194 S2 discovered by entity resolution",
+      "time": "Day 16",
+      "status": "PENDING_VALIDATION"
+    },
+    {
+      "alert_id": "A004",
+      "priority": "MEDIUM",
+      "module": "Network",
+      "message": "PH2 + TXN1 + VEH1 converge on S1",
+      "time": "Day 15",
+      "status": "PENDING_VALIDATION"
+    }
+  ],
+  "safety_zones": [
+    {
+      "zone_id": "ZONE-01",
+      "area": "NW Delhi locality / LOC1",
+      "color": "GREEN",
+      "interpretation": "Low demo density",
+      "data_type": "Synthetic"
+    },
+    {
+      "zone_id": "ZONE-02",
+      "area": "Workplace corridor / LOC2",
+      "color": "YELLOW",
+      "interpretation": "Moderate demo density",
+      "data_type": "Synthetic"
+    },
+    {
+      "zone_id": "ZONE-03",
+      "area": "Confrontation site / LOC3",
+      "color": "RED",
+      "interpretation": "Critical demo incident concentration",
+      "data_type": "Synthetic"
+    },
+    {
+      "zone_id": "ZONE-04",
+      "area": "Central Market (fictional demo area)",
+      "color": "ORANGE",
+      "interpretation": "High demo complaint density",
+      "data_type": "Synthetic"
+    },
+    {
+      "zone_id": "ZONE-05",
+      "area": "Sector 4 (fictional demo area)",
+      "color": "YELLOW",
+      "interpretation": "Moderate demo density",
+      "data_type": "Synthetic"
+    }
+  ],
+  "safe_routes": [
+    {
+      "route_id": "RT-001",
+      "from": "LOC1",
+      "to": "LOC2",
+      "route": "Route A",
+      "safety_score": 82,
+      "reason": "Lower synthetic incident density; fewer recent alerts; better proximity to emergency-service points."
+    },
+    {
+      "route_id": "RT-002",
+      "from": "LOC1",
+      "to": "LOC2",
+      "route": "Route B",
+      "safety_score": 61,
+      "reason": "Higher synthetic incident density near LOC3 corridor."
+    },
+    {
+      "route_id": "RT-003",
+      "from": "LOC1",
+      "to": "LOC2",
+      "route": "Route C",
+      "safety_score": 74,
+      "reason": "Moderate incident density; fewer recent alerts than Route B."
+    }
+  ],
+  "emergency_services": [
+    {
+      "service_id": "ES-001",
+      "type": "Police Station",
+      "name": "Demo Police Station North-West",
+      "area": "ZONE-01",
+      "status": "AVAILABLE"
+    },
+    {
+      "service_id": "ES-002",
+      "type": "Hospital",
+      "name": "Demo General Hospital",
+      "area": "ZONE-02",
+      "status": "AVAILABLE"
+    },
+    {
+      "service_id": "ES-003",
+      "type": "Emergency Response Unit",
+      "name": "Demo Women Safety Response Unit",
+      "area": "ZONE-03",
+      "status": "AVAILABLE"
+    },
+    {
+      "service_id": "ES-004",
+      "type": "Safe/Public Location",
+      "name": "Demo Community Help Centre",
+      "area": "ZONE-04",
+      "status": "OPEN"
+    }
+  ],
+  "sos": {
+    "alert_id": "SOS-WS-0001",
+    "case_id": "DEMO/WS-2026-0417",
+    "status_flow": [
+      "RECEIVED",
+      "ASSIGNED",
+      "RESPONDING",
+      "RESOLVED"
+    ],
+    "current_status": "ASSIGNED",
+    "location": "Simulated current location near LOC2",
+    "contacts": [
+      "Emergency Contact 1",
+      "Emergency Contact 2"
+    ],
+    "response_unit": "Demo Women Safety Response Unit",
+    "note": "Synthetic SOS workflow for platform testing; not a real emergency dispatch."
+  }
+}

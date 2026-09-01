@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TriNetra — AI-Powered Criminal Network Intelligence Platform</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<script>if (sessionStorage.getItem("trinetra_auth")) document.documentElement.classList.add("authed");</script>
+
+<!-- ===================== LOGIN SCREEN ===================== -->
+<div id="login-screen">
+  <div class="login-split">
+    <div class="login-hero">
+      <div class="brand">
+        <div class="brand-mark">TN</div>
+        <div class="brand-text">
+          <div class="title" style="font-size:1.3rem;">TriNetra</div>
+          <div class="tagline">Connecting Data. Revealing Networks. Empowering Investigations.</div>
+        </div>
+      </div>
+      <span class="pill-badge">⚠ DEMO ENVIRONMENT — SYNTHETIC DATA</span>
+      <h1>Criminal Network Intelligence Platform</h1>
+      <p class="hero-sub">
+        AI-assisted entity extraction, relationship mapping and investigative analytics for authorized
+        law-enforcement use — including a dedicated Women Safety Module for harassment, stalking and
+        repeat-offender pattern analysis.
+      </p>
+      <ul class="hero-features">
+        <li><span class="hf-icon">🕸</span> Knowledge graph across FIRs, CDRs, financial &amp; surveillance records</li>
+        <li><span class="hf-icon">🛡</span> Dedicated Women Safety Module with risk prioritization</li>
+        <li><span class="hf-icon">🔎</span> Explainable AI — every insight traces back to source evidence</li>
+        <li><span class="hf-icon">✅</span> Human-in-the-loop verification on every AI-inferred link</li>
+      </ul>
+      <div class="hero-badges">
+        <span>Privacy</span><span>Access Control</span><span>Audit Logging</span><span>Evidence Preservation</span><span>Human Verification</span>
+      </div>
+    </div>
+
+    <div class="login-form-wrap">
+      <form id="login-form" class="login-form" novalidate>
+        <h2>Investigator Sign-In</h2>
+        <p class="login-sub">Enter your credentials to access the platform.</p>
+
+        <label class="field-label" for="login-role">Sign in as</label>
+        <select id="login-role" class="login-input">
+          <option>Investigating Officer</option>
+          <option>Intelligence Analyst</option>
+          <option>Cyber &amp; Financial Investigator</option>
+          <option>Supervisory Officer</option>
+          <option>NCRB Administrator</option>
+        </select>
+
+        <label class="field-label" for="login-id">Investigator ID</label>
+        <input class="login-input" type="text" id="login-id" placeholder="e.g. IO-114" autocomplete="username" />
+
+        <label class="field-label" for="login-password">Password</label>
+        <div class="password-wrap">
+          <input class="login-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+          <button type="button" class="pw-toggle" id="pw-toggle" title="Show/hide password">👁</button>
+        </div>
+
+        <label class="remember-row">
+          <input type="checkbox" id="login-remember" checked />
+          Keep me signed in on this device
+        </label>
+
+        <div class="login-error hidden" id="login-error"></div>
+
+        <button type="submit" class="btn btn-primary login-submit" id="login-submit">Sign In →</button>
+
+        <p class="login-forgot">Forgot password? Contact your System Administrator.</p>
+
+        <div class="demo-credential-box">
+          <div><strong>🔑 Demo Access</strong></div>
+          <div>ID: <code>IO-114</code> &nbsp;·&nbsp; Password: <code>TriNetra@2026</code></div>
+          <button type="button" class="btn btn-secondary btn-sm" id="fill-demo-creds">Use demo credentials</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== APP SHELL ===================== -->
+<div id="app-shell">
+
+  <div class="demo-banner">⚠ DEMO ENVIRONMENT — SYNTHETIC DATA — For demonstration purposes only. Not for operational use.</div>
+
+  <div class="shell-body">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark">TN</div>
+        <div class="brand-text">
+          <div class="title">TriNetra</div>
+          <div class="tagline">Criminal Network Intelligence</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="side-link active" data-view="dashboard"><span class="si">🏠</span>Dashboard</button>
+        <button class="side-link ws-link" data-view="womensafety"><span class="si">🛡</span>Women Safety</button>
+
+        <div class="side-group-label">Analysis</div>
+        <button class="side-link" data-view="network"><span class="si">🕸</span>Network Graph</button>
+        <button class="side-link" data-view="investigation"><span class="si">🔎</span>Entity Search</button>
+        <button class="side-link" data-view="extraction"><span class="si">🤖</span>AI &amp; NLP Analysis</button>
+        <button class="side-link" data-view="timeline"><span class="si">📅</span>Timeline</button>
+        <button class="side-link" data-view="patterns"><span class="si">📊</span>Pattern Detection</button>
+        <button class="side-link" data-view="riskscoring"><span class="si">⚠</span>Risk Scoring</button>
+        <button class="side-link" data-view="linkanalysis"><span class="si">🔗</span>Link Analysis</button>
+
+        <div class="side-group-label">Data</div>
+        <button class="side-link" data-view="datasources"><span class="si">🗄</span>Data Sources</button>
+        <button class="side-link" data-view="ingestion"><span class="si">⬆</span>Upload Data</button>
+        <button class="side-link" data-view="datamanagement"><span class="si">🧮</span>Data Management</button>
+
+        <div class="side-group-label">Reports</div>
+        <button class="side-link" data-view="reports"><span class="si">📄</span>Case Reports</button>
+        <button class="side-link" data-view="exportdata"><span class="si">⬇</span>Export Data</button>
+        <button class="side-link" data-view="auditlogs"><span class="si">🧾</span>Audit Logs</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status"><span class="status-dot"></span> All Systems Operational</div>
+        <div class="version-tag">TriNetra v1.0.0 · Demo Build</div>
+      </div>
+    </aside>
+
+    <div class="content-col">
+
+      <div class="topbar">
+        <button class="icon-btn" id="sidebar-toggle" title="Toggle menu">☰</button>
+        <div class="topbar-search">
+          <input type="text" id="global-search" placeholder="Search by person, phone, location, vehicle, FIR ID…" />
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" title="Notifications">🔔</button>
+          <button class="icon-btn" title="Help">❓</button>
+          <div class="profile-chip" id="profile-chip"><span class="avatar" id="profile-avatar">IO</span> <span id="profile-role">Investigator</span> ▾
+            <div class="profile-menu hidden" id="profile-menu">
+              <div class="profile-menu-head">Signed in as <strong id="profile-menu-role">Investigator</strong></div>
+              <button type="button" id="logout-btn">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <main>
+
+        <!-- ===================== DASHBOARD ===================== -->
+        <section id="view-dashboard" class="view active">
+          <div class="page-header">
+            <h1>Investigation Intelligence Dashboard</h1>
+            <p>Explore relationships, patterns and investigative leads across connected datasets.</p>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-label">Total Records</div>
+              <div class="kpi-value" id="kpi-records">—</div>
+              <div class="kpi-trend">Synthetic dataset</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Entities</div>
+              <div class="kpi-value" id="kpi-entities">—</div>
+              <div class="kpi-trend">People, phones, orgs &amp; more</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Relationships</div>
+              <div class="kpi-value" id="kpi-relationships">—</div>
+              <div class="kpi-trend">Observed + inferred</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Active Cases</div>
+              <div class="kpi-value" id="kpi-cases">—</div>
+              <div class="kpi-trend">Incl. Women Safety module</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Potential Leads</div>
+              <div class="kpi-value" id="kpi-leads">—</div>
+              <div class="kpi-trend">Pending investigator review</div>
+            </div>
+          </div>
+
+          <div class="card ws-spotlight" id="ws-spotlight">
+            <div class="ws-spotlight-icon">🛡</div>
+            <div class="ws-spotlight-body">
+              <div class="ws-spotlight-title">Women Safety Module</div>
+              <div class="ws-spotlight-sub">Active case DEMO/WS-2026-0417 · Stalking &amp; Harassment Investigation — repeat-offender pattern confirmed</div>
+            </div>
+            <span class="pill high">RISK: HIGH</span>
+            <button class="btn btn-primary btn-sm" data-action="open-womensafety">Open Women Safety Module →</button>
+          </div>
+
+          <div class="dashboard-grid-3">
+            <div class="card card-pad dash-graph-card">
+              <div class="section-title">
+                Network Graph
+                <span style="display:flex; gap:8px;">
+                  <button class="btn btn-secondary btn-sm" id="dash-graph-reset">Reset</button>
+                  <button class="btn btn-primary btn-sm" data-action="open-network">Open Full Graph ⤢</button>
+                </span>
+              </div>
+              <p style="color:var(--gray); font-size:0.82rem; margin:-4px 0 8px;">Interactive relationship mapping — the same live knowledge graph used across the platform.</p>
+              <div id="cy-dashboard"></div>
+              <div class="legend" id="dashboard-legend"></div>
+            </div>
+
+            <div class="dash-side-col">
+              <div class="card card-pad">
+                <div class="section-title">Top High-Risk Individuals <a href="#" data-action="open-riskscoring" style="font-size:0.75rem; font-weight:600;">View All</a></div>
+                <div id="risk-leaderboard"></div>
+              </div>
+              <div class="card card-pad">
+                <div class="section-title">Recent Alerts <a href="#" data-action="open-linkanalysis" style="font-size:0.75rem; font-weight:600;">View All</a></div>
+                <div id="insight-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid-2">
+            <div class="card card-pad">
+              <div class="section-title">Timeline of Key Events <a href="#" data-action="open-timeline" style="font-size:0.75rem; font-weight:600;">View Full Timeline</a></div>
+              <div id="dash-timeline-strip"></div>
+            </div>
+            <div class="card card-pad">
+              <div class="section-title">Geographic Activity Map</div>
+              <div id="dash-heatmap"></div>
+            </div>
+          </div>
+
+          <div class="card card-pad">
+            <div class="section-title">Sample Dataset — Crime Intelligence Records</div>
+            <div class="table-scroll">
+              <table class="data-table" id="dash-sample-table"></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== WOMEN SAFETY MODULE ===================== -->
+        <section id="view-womensafety" class="view">
+          <div class="page-header">
+            <h1><span style="color:var(--rose);">🛡</span> Women Safety Module</h1>
+            <p>Specializes TriNetra's core workflow for victims, suspects, witnesses, repeat offenders, and harassment/stalking patterns — with risk prioritization and case timelines.</p>
+          </div>
+
+          <div class="card card-pad">
+            <div class="section-title">Why This Matters — Delhi Crime-Against-Women Context <span class="cite-badge">Public, cited data — context only</span></div>
+            <div class="stat-context-grid" id="ws-context-stats"></div>
+            <div class="bar-chart" id="ws-yoy-chart"></div>
+            <div id="ws-context-note" style="font-size:0.78rem; color:var(--gray); margin-top:10px;"></div>
+          </div>
+
+          <div class="card card-pad">
+            <div class="section-title">Synthetic Demonstration Case — DEMO/WS-2026-0417 <span class="cite-badge synthetic">Fully synthetic — no real persons</span></div>
+            <div id="ws-timeline"></div>
+          </div>
+
+          <div class="page-header" style="margin-top:6px;">
+            <h1 style="font-size:1.15rem;">Case Knowledge Graph</h1>
+            <p>Solid edges are directly observed from source records; dashed rose edges are AI-inferred and await/received investigator validation.</p>
+          </div>
+
+          <div class="graph-toolbar">
+            <div id="ws-type-filters" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+            <input type="text" id="ws-graph-search" placeholder="Search within case graph…" style="padding:8px 12px; border:1px solid var(--border); border-radius:8px; min-width:200px;" />
+            <button class="btn btn-secondary btn-sm" id="ws-graph-reset">Reset View</button>
+          </div>
+
+          <div class="graph-layout">
+            <div id="cy-ws"></div>
+            <div class="graph-side">
+              <div class="card card-pad" id="ws-entity-detail-panel">
+                <div class="detail-empty">Click a node to see entity details.</div>
+              </div>
+              <div class="card card-pad">
+                <div class="section-title" style="margin-bottom:6px;">Legend</div>
+                <div class="legend" id="ws-graph-legend"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="page-header" style="margin-top:6px;">
+            <h1 style="font-size:1.15rem;">Risk &amp; Pattern Detection</h1>
+            <p>Every AI-generated lead below is a suggestion with evidence, not an automatic conclusion — the investigator accepts, rejects, or requests more evidence.</p>
+          </div>
+          <div class="analytics-grid" id="ws-analytics-cards"></div>
+        </section>
+
+        <!-- ===================== INVESTIGATION / ENTITY SEARCH ===================== -->
+        <section id="view-investigation" class="view">
+          <div class="page-header">
+            <h1>Case Investigation</h1>
+            <p>Case NX-2026-0147 · Financial Network Investigation · <span class="pill low">ACTIVE</span></p>
+          </div>
+
+          <div class="search-bar">
+            <input type="text" id="investigation-search" placeholder="Search person, phone, vehicle, organization or location…" />
+            <button class="btn btn-secondary" id="investigation-search-clear">Clear</button>
+          </div>
+
+          <div class="search-results" id="investigation-results"></div>
+
+          <div id="entity-profile"></div>
+        </section>
+
+        <!-- ===================== NETWORK GRAPH ===================== -->
+        <section id="view-network" class="view">
+          <div class="page-header">
+            <h1>Network Graph</h1>
+            <p>Interactive relationship mapping. Click a node to inspect evidence; dashed orange links are AI-surfaced candidate connections awaiting human review.</p>
+          </div>
+
+          <div class="graph-toolbar">
+            <div id="type-filters" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+            <input type="text" id="graph-search" placeholder="Search within graph…" style="padding:8px 12px; border:1px solid var(--border); border-radius:8px; min-width:200px;" />
+            <button class="btn btn-secondary btn-sm" id="graph-reset">Reset View</button>
+          </div>
+
+          <div class="graph-layout">
+            <div id="cy"></div>
+            <div class="graph-side">
+              <div class="card card-pad" id="entity-detail-panel">
+                <div class="detail-empty">Click a node to see entity details.</div>
+              </div>
+              <div class="card card-pad">
+                <div class="section-title" style="margin-bottom:6px;">Legend</div>
+                <div class="legend" id="graph-legend"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== AI / NLP EXTRACTION ===================== -->
+        <section id="view-extraction" class="view">
+          <div class="page-header">
+            <h1>AI &amp; NLP Analysis</h1>
+            <p>Demonstrates converting an unstructured report into structured entities and typed relationships.</p>
+          </div>
+
+          <div class="card card-pad">
+            <div class="section-title">Input Text</div>
+            <div class="fir-box" id="fir-text"></div>
+            <div style="margin-top:14px; display:flex; gap:10px;">
+              <button class="btn btn-primary" id="run-extraction">Analyze</button>
+              <button class="btn btn-secondary" id="reset-extraction">Reset</button>
+            </div>
+          </div>
+
+          <div class="pipeline-steps" id="pipeline-steps">
+            <div class="pipeline-step" data-step="raw">RAW TEXT</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="nlp">NLP PROCESSING</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="entities">ENTITY EXTRACTION</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="relations">RELATIONSHIP EXTRACTION</div>
+          </div>
+
+          <div class="card card-pad hidden" id="extraction-results">
+            <div class="section-title">Extracted Entities</div>
+            <div class="extracted-grid" id="extracted-entities"></div>
+
+            <div class="section-title">Relationships Detected</div>
+            <div id="detected-relationships"></div>
+
+            <button class="btn btn-primary" id="add-to-graph">Add to Knowledge Graph</button>
+            <span id="added-confirmation" style="margin-left:10px; color:var(--green); font-weight:700; font-size:0.85rem;"></span>
+          </div>
+        </section>
+
+        <!-- ===================== TIMELINE ===================== -->
+        <section id="view-timeline" class="view">
+          <div class="page-header">
+            <h1>Investigation Timeline</h1>
+            <p>Case NX-2026-0147 · Chronological view of calls, meetings, transactions and location activity, derived from the live dataset.</p>
+          </div>
+          <div class="graph-toolbar" id="timeline-filters"></div>
+          <div class="card card-pad">
+            <div id="timeline-list"></div>
+          </div>
+        </section>
+
+        <!-- ===================== PATTERN DETECTION (Graph Analytics) ===================== -->
+        <section id="view-patterns" class="view">
+          <div class="page-header">
+            <h1>Graph Analytics &amp; AI Insights</h1>
+            <p>Structural analysis of the knowledge graph — every figure below is computed live from the dataset.</p>
+          </div>
+          <div class="analytics-grid" id="pattern-cards"></div>
+          <div class="card card-pad">
+            <div class="section-title">Top Connected Entities</div>
+            <div class="bar-chart" id="top-connected-chart"></div>
+          </div>
+          <div class="card card-pad ai-insight-card">
+            <div class="section-title">🧠 AI Insight</div>
+            <p>Potentially significant network cluster detected around <strong>Rahul Sharma</strong>, <strong>Amit Verma</strong> and <strong>Vikram Singh</strong>.</p>
+            <div class="field-label">Evidence</div>
+            <ul class="evidence-list">
+              <li>Repeated communication between 3 entities</li>
+              <li>Shared organization exposure (Shivam Logistics ↔ Alpha Trading)</li>
+              <li>Cross-location activity in Delhi</li>
+              <li>Multiple financial associations</li>
+            </ul>
+            <div class="field-label">Analytical Confidence</div>
+            <div class="field-value" style="margin-bottom:10px;">87%</div>
+            <button class="btn btn-primary btn-sm" id="pattern-review-evidence">Review Evidence</button>
+          </div>
+        </section>
+
+        <!-- ===================== RISK SCORING ===================== -->
+        <section id="view-riskscoring" class="view">
+          <div class="page-header">
+            <h1>Risk Scoring</h1>
+            <p>Ranked structural priority across every entity in both active cases. A transparent, degree-based signal — not a guilt or criminality score.</p>
+          </div>
+          <div class="card card-pad">
+            <div id="risk-scoring-list"></div>
+          </div>
+        </section>
+
+        <!-- ===================== LINK ANALYSIS ===================== -->
+        <section id="view-linkanalysis" class="view">
+          <div class="page-header">
+            <h1>Link Analysis — Candidate Hidden Links</h1>
+            <p>Every AI-inferred connection across both cases, awaiting or already given investigator review.</p>
+          </div>
+          <div id="link-analysis-list"></div>
+        </section>
+
+        <!-- ===================== DATA SOURCES ===================== -->
+        <section id="view-datasources" class="view">
+          <div class="page-header">
+            <h1>Data Sources</h1>
+            <p>Ingestion channels connected to TriNetra, with live record counts from the current dataset.</p>
+          </div>
+          <div class="analytics-grid" id="data-sources-grid"></div>
+        </section>
+
+        <!-- ===================== DATA INGESTION / UPLOAD ===================== -->
+        <section id="view-ingestion" class="view">
+          <div class="page-header">
+            <h1>Data Ingestion</h1>
+            <p>Upload case records for AI/NLP processing and knowledge-graph construction.</p>
+          </div>
+
+          <div class="upload-grid">
+            <div class="card card-pad upload-card">
+              <div class="upload-icon">📄</div>
+              <div class="upload-title">FIR / Reports</div>
+              <div class="upload-sub">Upload CSV / TXT / PDF</div>
+              <input type="file" id="upload-fir" />
+            </div>
+            <div class="card card-pad upload-card">
+              <div class="upload-icon">📞</div>
+              <div class="upload-title">CDR</div>
+              <div class="upload-sub">Upload CSV</div>
+              <input type="file" id="upload-cdr" />
+            </div>
+            <div class="card card-pad upload-card">
+              <div class="upload-icon">💳</div>
+              <div class="upload-title">Financial Transactions</div>
+              <div class="upload-sub">Upload CSV / Excel</div>
+              <input type="file" id="upload-fin" />
+            </div>
+            <div class="card card-pad upload-card">
+              <div class="upload-icon">🎥</div>
+              <div class="upload-title">Surveillance Reports</div>
+              <div class="upload-sub">Upload CSV / TXT</div>
+              <input type="file" id="upload-surv" />
+            </div>
+          </div>
+
+          <div class="card card-pad">
+            <div class="section-title">Supported Data</div>
+            <div style="display:flex; gap:16px; font-size:0.85rem; color:var(--green); font-weight:600; margin-bottom:14px;">
+              <span>✓ Synthetic CSV</span><span>✓ Excel</span><span>✓ Text reports</span>
+            </div>
+            <button class="btn btn-primary" id="process-data-btn">Process Data</button>
+          </div>
+
+          <div class="pipeline-steps" id="ingestion-pipeline-steps">
+            <div class="pipeline-step" data-step="uploaded">UPLOADED</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="preprocessing">PREPROCESSING</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="nlp">NLP EXTRACTION</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="matching">ENTITY MATCHING</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="relationships">RELATIONSHIP EXTRACTION</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="graph">GRAPH UPDATE</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="complete">ANALYSIS COMPLETE</div>
+          </div>
+
+          <div class="card card-pad hidden" id="ingestion-results">
+            <div class="section-title">Processing Complete</div>
+            <div style="display:flex; gap:28px; flex-wrap:wrap;">
+              <div><div class="kpi-value">1,284</div><div class="kpi-label">Records Processed</div></div>
+              <div><div class="kpi-value">327</div><div class="kpi-label">Entities Extracted</div></div>
+              <div><div class="kpi-value">582</div><div class="kpi-label">Relationships Discovered</div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== DATA MANAGEMENT ===================== -->
+        <section id="view-datamanagement" class="view">
+          <div class="page-header">
+            <h1>Data Management</h1>
+            <p>Every entity currently in the knowledge graph, across both cases.</p>
+          </div>
+          <div class="search-bar">
+            <input type="text" id="datamanagement-search" placeholder="Filter by name…" />
+          </div>
+          <div class="card card-pad">
+            <div class="table-scroll">
+              <table class="data-table" id="datamanagement-table"></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== CASE REPORTS ===================== -->
+        <section id="view-reports" class="view">
+          <div class="page-header">
+            <h1>Forensic / Investigation Reports</h1>
+            <p>Generate a case summary report for investigator review and case-file inclusion.</p>
+          </div>
+          <div id="report-cards"></div>
+
+          <div class="card card-pad">
+            <div class="section-title">How TriNetra Works</div>
+            <div class="arch-pipeline">
+              <span>Data Sources</span><span class="arch-arrow">→</span>
+              <span>Python Data Processing</span><span class="arch-arrow">→</span>
+              <span>NLP / AI</span><span class="arch-arrow">→</span>
+              <span>Entity + Relationship Extraction</span><span class="arch-arrow">→</span>
+              <span>Neo4j Knowledge Graph</span><span class="arch-arrow">→</span>
+              <span>Graph Analytics + ML</span><span class="arch-arrow">→</span>
+              <span>FastAPI</span><span class="arch-arrow">→</span>
+              <span>React Dashboard</span>
+            </div>
+            <div class="tech-badges">
+              <span>Python</span><span>FastAPI</span><span>spaCy</span><span>Transformers</span><span>Neo4j</span><span>Graph Data Science</span><span>XGBoost</span><span>Isolation Forest</span><span>React</span><span>Cytoscape.js</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== EXPORT DATA ===================== -->
+        <section id="view-exportdata" class="view">
+          <div class="page-header">
+            <h1>Export Data</h1>
+            <p>Download the current knowledge graph as CSV for offline case-file work.</p>
+          </div>
+          <div class="card card-pad">
+            <label class="field-label" for="export-dataset-select">Dataset</label>
+            <select id="export-dataset-select" class="login-input" style="max-width:360px; margin-bottom:16px;">
+              <option value="main">Main Case — NX-2026-0147 (Financial Network)</option>
+              <option value="ws">Women Safety Case — DEMO/WS-2026-0417</option>
+              <option value="all">All Cases Combined</option>
+            </select>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-primary" id="export-entities-csv">Export Entities CSV</button>
+              <button class="btn btn-secondary" id="export-relationships-csv">Export Relationships CSV</button>
+            </div>
+            <div id="export-confirmation" style="margin-top:12px; font-size:0.82rem; color:var(--green); font-weight:600;"></div>
+          </div>
+        </section>
+
+        <!-- ===================== AUDIT LOGS ===================== -->
+        <section id="view-auditlogs" class="view">
+          <div class="page-header">
+            <h1>Audit Logs</h1>
+            <p>Session activity trail — every verification decision and export is recorded here.</p>
+          </div>
+          <div class="card card-pad">
+            <div class="table-scroll">
+              <table class="data-table" id="audit-log-table"></table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <footer class="app-footer">
+        <div><strong>TriNetra</strong> is an investigative decision-support system. It does not determine guilt or replace authorized human judgment.</div>
+        <div class="badges">
+          <span>Privacy</span><span>Access Control</span><span>Audit Logging</span><span>Evidence Preservation</span><span>Human Verification</span>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+
+<script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/data-womensafety.js"></script>
+<script src="js/graph.js"></script>
+<script src="js/login.js"></script>
+<script src="js/womensafety.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

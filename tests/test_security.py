@@ -119,6 +119,25 @@ def test_login_rejects_wrong_password_without_revealing_the_account(client):
     # account-enumeration oracle.
     assert response.json()["error"]["message"] == unknown.json()["error"]["message"]
 
+    # Undo the failed attempt this test just recorded. Without this the counter
+    # survives the run and eventually locks an account the rest of the suite
+    # signs in with.
+    from sqlalchemy import update
+
+    from app.db.models import User
+    from app.db.session import SessionLocal
+
+    db = SessionLocal()
+    try:
+        db.execute(
+            update(User)
+            .where(User.service_id == "IO-114")
+            .values(failed_attempts=0, locked_until=None)
+        )
+        db.commit()
+    finally:
+        db.close()
+
 
 def test_protected_endpoints_reject_anonymous_callers(client):
     for path in ("/api/v1/dashboard", "/api/v1/entities/search?q=a",

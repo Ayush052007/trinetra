@@ -34,6 +34,28 @@ def credentials() -> dict[str, str]:
     return creds
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _clear_account_locks():
+    """Release any lockout left behind by a previous run.
+
+    Several tests deliberately submit bad passwords. Those attempts persist in
+    the development database, so without this the suite locks the accounts it
+    depends on and every later run fails with 423 before testing anything.
+    """
+    from sqlalchemy import update
+
+    from app.db.models import User
+    from app.db.session import SessionLocal
+
+    db = SessionLocal()
+    try:
+        db.execute(update(User).values(failed_attempts=0, locked_until=None))
+        db.commit()
+    finally:
+        db.close()
+    yield
+
+
 @pytest.fixture(scope="session")
 def client():
     from fastapi.testclient import TestClient

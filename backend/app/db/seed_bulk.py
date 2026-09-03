@@ -252,8 +252,17 @@ def generate_case_events(db: Session, case: Case) -> int:
     return created
 
 
-def seed_all(reset: bool = True, with_corpus: bool = True, quiet: bool = False) -> dict:
-    """Build the whole database from scratch. Returns a summary."""
+def seed_all(
+    reset: bool = True,
+    with_corpus: bool = True,
+    quiet: bool = False,
+    write_credentials: bool = True,
+) -> dict:
+    """Build the whole database from scratch. Returns a summary.
+
+    Pass write_credentials=False when seeding a throwaway database, so the
+    handover file for the real one is left alone.
+    """
 
     def log(message: str) -> None:
         if not quiet:

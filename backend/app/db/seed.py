@@ -168,8 +168,25 @@ def seed_users(db: Session) -> dict[str, str]:
     return credentials
 
 
+def database_identity() -> str:
+    """A short, non-secret label for the database currently configured."""
+    from app.config import settings
+
+    url = settings.DATABASE_URL
+    if url.startswith("sqlite"):
+        return "sqlite:" + Path(url.split("///")[-1]).name
+    # Never include credentials: host and database name only.
+    tail = url.split("@")[-1]
+    return "postgres:" + tail.split("?")[0]
+
+
 def write_credentials_file(credentials: dict[str, str], path: Path) -> None:
-    """Write the generated credentials to a gitignored operator handover file."""
+    """Write the generated credentials to a gitignored operator handover file.
+
+    The file records which database it describes. Seeding a throwaway database
+    would otherwise overwrite the credentials for the real one, leaving a file
+    whose passwords open nothing - a genuinely confusing failure.
+    """
     roster = {m["service_id"]: m for m in SD.DEPARTMENT_ROSTER}
     lines = [
         "# TRINETRA - Generated Account Credentials",
@@ -180,6 +197,7 @@ def write_credentials_file(credentials: dict[str, str], path: Path) -> None:
         "> Re-running the seed generates entirely new passwords.",
         "",
         f"Generated: {datetime.now(UTC).isoformat(timespec='seconds')}",
+        f"Database:  `{database_identity()}`",
         "",
         "| Service ID | Name | Designation | Role | Password |",
         "|---|---|---|---|---|",

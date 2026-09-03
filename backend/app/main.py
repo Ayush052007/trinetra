@@ -113,7 +113,13 @@ async def lifespan(app: FastAPI):
         finally:
             db.close()
 
-    threading.Thread(target=warm_up, name="trinetra-warmup", daemon=True).start()
+    # A background thread cannot outlive a serverless invocation, and starting
+    # one per cold start would just burn the request's time budget. There, the
+    # graph is built lazily on first use instead.
+    if settings.SERVERLESS:
+        logger.info("Serverless mode: skipping startup warm-up.")
+    else:
+        threading.Thread(target=warm_up, name="trinetra-warmup", daemon=True).start()
 
     logger.info(
         "%s v%s ready (%s, data=%s)",

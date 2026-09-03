@@ -53,6 +53,12 @@ class Settings(BaseSettings):
     API_RATE_LIMIT_PER_MINUTE: int = 300
     CORS_ORIGINS: str = "http://localhost:8000,http://127.0.0.1:8000"
 
+    # ---- Serverless mode -------------------------------------------------
+    # Set on platforms that recreate the process per request (Vercel, Lambda).
+    # Disables the startup warm-up thread and the WebSocket route, neither of
+    # which can work when nothing survives between invocations.
+    SERVERLESS: bool = False
+
     # ---- First-boot seeding ----------------------------------------------
     # On a cloud host there is no shell to run the seed from, so the app can
     # populate an empty database itself on first boot. It only ever runs when

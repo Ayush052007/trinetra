@@ -1,5 +1,7 @@
 # Secrets and generated credentials - never commit
 .env
+.env.*
+!.env.example
 CREDENTIALS.md
 
 # Database

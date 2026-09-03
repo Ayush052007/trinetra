@@ -56,7 +56,10 @@ def seed_corpus(db: Session, writer: EntityWriter, analyst: User) -> dict[str, i
     """Load the generated background population."""
     corpus = CorpusGenerator().generate()
 
-    for entity in corpus.entities:
+    # Commit periodically. The whole corpus in one transaction is fine locally
+    # but fragile over a remote link, where a single dropped connection would
+    # discard tens of thousands of rows.
+    for index, entity in enumerate(corpus.entities, 1):
         writer.entity(
             entity.uid,
             entity.type,
@@ -68,6 +71,9 @@ def seed_corpus(db: Session, writer: EntityWriter, analyst: User) -> dict[str, i
             longitude=entity.longitude,
             classification=DataClassification.SYNTHETIC,
         )
+        if index % 500 == 0:
+            db.commit()
+    db.commit()
 
     job = IngestionJob(
         filename="synthetic_background_corpus.generated",
@@ -96,7 +102,7 @@ def seed_corpus(db: Session, writer: EntityWriter, analyst: User) -> dict[str, i
     db.add(job)
     db.flush()
 
-    for relationship in corpus.relationships:
+    for index, relationship in enumerate(corpus.relationships, 1):
         writer.relationship(
             relationship.source_uid,
             relationship.target_uid,
@@ -106,6 +112,9 @@ def seed_corpus(db: Session, writer: EntityWriter, analyst: User) -> dict[str, i
             confidence=relationship.confidence,
             attributes=relationship.attributes,
         )
+        if index % 500 == 0:
+            db.commit()
+    db.commit()
 
     seen: set[str] = set()
     duplicates = 0

@@ -8,7 +8,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from pydantic import BaseModel, Field
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.core.deps import api_rate_limiter, client_ip, require_permission
 from app.core.rbac import Perm
@@ -103,20 +103,46 @@ def hidden_links(
     if case_id:
         stored_query = stored_query.where(Relationship.case_id == case_id)
 
+    # Load the links and their endpoints in one query, then batch-load the
+    # supporting records. Walking these with db.get() per row is a handful of
+    # round-trips each - unnoticeable locally, ~12 seconds against a remote
+    # database.
+    stored_rows = db.scalars(
+        stored_query.order_by(Relationship.confidence.desc()).options(
+            joinedload(Relationship.source_entity),
+            joinedload(Relationship.target_entity),
+        )
+    ).all()
+
+    supporting_ids: set[int] = set()
+    for rel in stored_rows:
+        supporting_ids.update((rel.derivation or {}).get("supporting_relationship_ids", []))
+    support_map = {
+        r.id: r
+        for r in db.scalars(
+            select(Relationship)
+            .where(Relationship.id.in_(supporting_ids))
+            .options(
+                joinedload(Relationship.source_entity),
+                joinedload(Relationship.target_entity),
+            )
+        )
+    } if supporting_ids else {}
+
     stored = []
-    for rel in db.scalars(stored_query.order_by(Relationship.confidence.desc())).all():
-        source = db.get(Entity, rel.source_id)
-        target = db.get(Entity, rel.target_id)
+    for rel in stored_rows:
+        source = rel.source_entity
+        target = rel.target_entity
         if not source or not target:
             continue
         derivation = rel.derivation or {}
         supporting = []
         for rid in derivation.get("supporting_relationship_ids", []):
-            support = db.get(Relationship, rid)
+            support = support_map.get(rid)
             if support is None:
                 continue
-            s_source = db.get(Entity, support.source_id)
-            s_target = db.get(Entity, support.target_id)
+            s_source = support.source_entity
+            s_target = support.target_entity
             supporting.append({
                 "relationship_id": support.id,
                 "description": (

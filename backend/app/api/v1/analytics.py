@@ -300,10 +300,18 @@ def timeline(
         ).all()
     ]
 
+    # One query for every entity the page references, rather than two per row.
+    referenced = {e.entity_id for e in rows if e.entity_id} | {
+        e.location_id for e in rows if e.location_id
+    }
+    entity_map = {
+        e.id: e for e in db.scalars(select(Entity).where(Entity.id.in_(referenced)))
+    } if referenced else {}
+
     items = []
     for event in rows:
-        entity = db.get(Entity, event.entity_id) if event.entity_id else None
-        location = db.get(Entity, event.location_id) if event.location_id else None
+        entity = entity_map.get(event.entity_id) if event.entity_id else None
+        location = entity_map.get(event.location_id) if event.location_id else None
         items.append({
             "uid": event.uid,
             "type": event.type,

@@ -8,7 +8,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from pydantic import BaseModel, Field
 from sqlalchemy import func, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.deps import api_rate_limiter, client_ip, require_permission
 from app.core.rbac import Perm
@@ -47,10 +47,23 @@ def candidates(
         stmt.order_by(ResolutionCandidate.confidence.desc()).offset(offset).limit(limit)
     ).all()
 
+    # Load every referenced entity and its aliases up front. Fetching them per
+    # candidate is four round-trips each, which is invisible against a local
+    # file and roughly 30 seconds against a remote database.
+    entity_ids = {r.entity_a_id for r in rows} | {r.entity_b_id for r in rows}
+    entities = {
+        e.id: e
+        for e in db.scalars(
+            select(Entity)
+            .where(Entity.id.in_(entity_ids))
+            .options(selectinload(Entity.aliases))
+        )
+    } if entity_ids else {}
+
     items = []
     for row in rows:
-        a = db.get(Entity, row.entity_a_id)
-        b = db.get(Entity, row.entity_b_id)
+        a = entities.get(row.entity_a_id)
+        b = entities.get(row.entity_b_id)
         if a and b:
             items.append(candidate_payload(row, a, b))
 

@@ -25,6 +25,30 @@ for package in ("backend", "database", "ai", "graph"):
 # Tell the application it is running serverless before anything imports config.
 os.environ.setdefault("SERVERLESS", "true")
 
-from app.main import app  # noqa: E402
+from app.main import app as _app  # noqa: E402
+
+
+async def app(scope, receive, send):
+    """Diagnostic wrapper: report exactly what Vercel hands the function."""
+    if scope["type"] == "http" and scope.get("path", "").rstrip("/") == "/__vercel_probe":
+        import json
+
+        headers = {
+            k.decode(): v.decode() for k, v in scope.get("headers", [])
+        }
+        payload = json.dumps({
+            "path": scope.get("path"),
+            "raw_path": scope.get("raw_path", b"").decode(errors="replace")
+            if isinstance(scope.get("raw_path"), bytes) else scope.get("raw_path"),
+            "query_string": scope.get("query_string", b"").decode(),
+            "root_path": scope.get("root_path"),
+            "headers": headers,
+        }, indent=2).encode()
+        await send({"type": "http.response.start", "status": 200,
+                    "headers": [(b"content-type", b"application/json")]})
+        await send({"type": "http.response.body", "body": payload})
+        return
+    await _app(scope, receive, send)
+
 
 __all__ = ["app"]

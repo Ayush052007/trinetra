@@ -216,10 +216,22 @@ def write_credentials_file(credentials: dict[str, str], path: Path) -> None:
 class EntityWriter:
     """Creates entities and relationships while keeping a uid -> row map."""
 
-    def __init__(self, db: Session) -> None:
+    def __init__(self, db: Session, flush_every: int = 1) -> None:
         self.db = db
         self.by_uid: dict[str, Entity] = {}
         self._rel_seq = 0
+        # A flush is a network round-trip. Flushing per row is fine against a
+        # local file but costs minutes against a remote database, so bulk
+        # loading raises this. Case seeding leaves it at 1, where later rows
+        # depend on the ids of earlier ones.
+        self.flush_every = flush_every
+        self._pending = 0
+
+    def _maybe_flush(self) -> None:
+        self._pending += 1
+        if self._pending >= self.flush_every:
+            self.db.flush()
+            self._pending = 0
 
     def entity(
         self,
@@ -247,16 +259,17 @@ class EntityWriter:
             data_classification=classification,
         )
         self.db.add(row)
-        self.db.flush()
+        # Appending to the relationship lets SQLAlchemy fill entity_id on the
+        # next flush, so the alias does not force a round-trip of its own.
         for alias in aliases or []:
-            self.db.add(
+            row.aliases.append(
                 EntityAlias(
-                    entity_id=row.id,
                     alias=alias,
                     normalized_alias=normalize(alias, entity_type),
                     source=source,
                 )
             )
+        self._maybe_flush()
         self.by_uid[uid] = row
         return row
 
@@ -297,7 +310,7 @@ class EntityWriter:
             data_classification=classification,
         )
         self.db.add(row)
-        self.db.flush()
+        self._maybe_flush()
         return row
 
 

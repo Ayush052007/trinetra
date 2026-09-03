@@ -56,6 +56,11 @@ def seed_corpus(db: Session, writer: EntityWriter, analyst: User) -> dict[str, i
     """Load the generated background population."""
     corpus = CorpusGenerator().generate()
 
+    # Bulk load: batch flushes. Restored before returning so any later
+    # id-dependent seeding still behaves exactly as before.
+    previous_flush_every = writer.flush_every
+    writer.flush_every = 500
+
     # Commit periodically. The whole corpus in one transaction is fine locally
     # but fragile over a remote link, where a single dropped connection would
     # discard tens of thousands of rows.
@@ -168,6 +173,7 @@ def seed_corpus(db: Session, writer: EntityWriter, analyst: User) -> dict[str, i
         )
 
     db.flush()
+    writer.flush_every = previous_flush_every
     return {
         "entities": len(corpus.entities),
         "relationships": len(corpus.relationships),

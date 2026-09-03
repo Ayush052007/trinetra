@@ -8,7 +8,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import func, or_, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.deps import api_rate_limiter, client_ip, require_permission
 from app.core.rbac import Perm
@@ -330,7 +330,13 @@ def list_entities(
         count_stmt = count_stmt.where(Entity.id.in_(subquery))
 
     total = db.scalar(count_stmt) or 0
-    rows = db.scalars(stmt.order_by(Entity.type, Entity.name).offset(offset).limit(limit)).all()
+    # selectinload, or every row lazy-loads its aliases in a separate query.
+    rows = db.scalars(
+        stmt.order_by(Entity.type, Entity.name)
+        .offset(offset)
+        .limit(limit)
+        .options(selectinload(Entity.aliases))
+    ).all()
     snapshot = graph_service.get_graph(db).snapshot()
 
     return {

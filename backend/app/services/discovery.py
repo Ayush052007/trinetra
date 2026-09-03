@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 for _p in (PROJECT_ROOT / "ai", PROJECT_ROOT / "graph"):
@@ -55,7 +55,14 @@ def discover_hidden_links(
     if not adjacency:
         return []
 
-    entities = {e.uid: e for e in db.scalars(select(Entity).where(Entity.is_active.is_(True))).all()}
+    entities = {
+        e.uid: e
+        for e in db.scalars(
+            select(Entity)
+            .where(Entity.is_active.is_(True))
+            .options(selectinload(Entity.aliases))
+        ).all()
+    }
 
     scope: set[str] | None = None
     if case_id is not None:
@@ -313,7 +320,12 @@ def refresh_resolution_candidates(db: Session, limit: int = 60) -> int:
     candidates = resolver.find_candidates(inputs)
 
     entities = {
-        e.uid: e for e in db.scalars(select(Entity).where(Entity.is_active.is_(True))).all()
+        e.uid: e
+        for e in db.scalars(
+            select(Entity)
+            .where(Entity.is_active.is_(True))
+            .options(selectinload(Entity.aliases))
+        ).all()
     }
     decided: set[tuple[int, int]] = {
         tuple(sorted((row.entity_a_id, row.entity_b_id)))

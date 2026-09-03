@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+from urllib.parse import parse_qsl, urlencode
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 for package in ("backend", "database", "ai", "graph"):
@@ -25,30 +26,33 @@ for package in ("backend", "database", "ai", "graph"):
 # Tell the application it is running serverless before anything imports config.
 os.environ.setdefault("SERVERLESS", "true")
 
-from app.main import app as _app  # noqa: E402
+from app.main import app as fastapi_app  # noqa: E402
+
+# vercel.json rewrites every request to this one function, which means the
+# function is handed the literal path "/api/index" and the URL the visitor
+# actually asked for is lost - every route then 404s. The rewrite therefore
+# carries the original path along in a query parameter, and this wrapper puts
+# it back before FastAPI sees the request.
+PATH_PARAM = "__vpath"
 
 
 async def app(scope, receive, send):
-    """Diagnostic wrapper: report exactly what Vercel hands the function."""
-    if scope["type"] == "http" and scope.get("path", "").rstrip("/") == "/__vercel_probe":
-        import json
-
-        headers = {
-            k.decode(): v.decode() for k, v in scope.get("headers", [])
-        }
-        payload = json.dumps({
-            "path": scope.get("path"),
-            "raw_path": scope.get("raw_path", b"").decode(errors="replace")
-            if isinstance(scope.get("raw_path"), bytes) else scope.get("raw_path"),
-            "query_string": scope.get("query_string", b"").decode(),
-            "root_path": scope.get("root_path"),
-            "headers": headers,
-        }, indent=2).encode()
-        await send({"type": "http.response.start", "status": 200,
-                    "headers": [(b"content-type", b"application/json")]})
-        await send({"type": "http.response.body", "body": payload})
-        return
-    await _app(scope, receive, send)
+    if scope["type"] in ("http", "websocket"):
+        query = scope.get("query_string", b"").decode("latin-1")
+        params = parse_qsl(query, keep_blank_values=True)
+        original = None
+        remaining = []
+        for key, value in params:
+            if key == PATH_PARAM and original is None:
+                original = value
+            else:
+                remaining.append((key, value))
+        if original is not None:
+            scope = dict(scope)
+            scope["path"] = "/" + original.lstrip("/")
+            scope["raw_path"] = scope["path"].encode("utf-8")
+            scope["query_string"] = urlencode(remaining).encode("latin-1")
+    await fastapi_app(scope, receive, send)
 
 
 __all__ = ["app"]

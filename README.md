@@ -18,6 +18,31 @@ in it presents an inference as an established fact.
 
 ---
 
+## Live deployment
+
+**https://trinetra-rosy-gamma.vercel.app**
+
+Sign in with a **Service ID** (not an email) and the shared demonstration
+password:
+
+| Service ID | Role | Password |
+|---|---|---|
+| `IO-114` | Investigating Officer | `TrinetraDemo#2026` |
+| `WSO-052` | Women Safety Officer | `TrinetraDemo#2026` |
+| `SI-207` | Supervisory Officer | `TrinetraDemo#2026` |
+| `AN-331` | Intelligence Analyst | `TrinetraDemo#2026` |
+| `ADM-001` | NCRB Administrator | `TrinetraDemo#2026` |
+
+That instance runs on Vercel against a managed PostgreSQL database, holding
+the same synthetic corpus as a local install. Every account sharing one
+password is a deliberate concession for a public demonstration instance and
+would not be acceptable for real case data - see `docs/VERCEL.md`.
+
+Live alerts fall back to polling there, because serverless functions cannot
+hold a WebSocket. Everything else behaves as it does locally.
+
+---
+
 ## Quick start
 
 Requires **Python 3.11+** (developed and tested on 3.14). Nothing else — no

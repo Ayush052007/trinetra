@@ -404,6 +404,12 @@ def seed_all(
         write_credentials_file(credentials, credentials_path)
         summary["credentials_file"] = str(credentials_path)
         log(f"\nCredentials written to {credentials_path}")
+        log(
+            "  Every account has its own generated password, and a reseed replaces\n"
+            "  them all. For a demonstration where you sign in as several roles in\n"
+            "  turn, set one shared password instead:\n"
+            "      python scripts_set_demo_password.py"
+        )
     return summary
 
 

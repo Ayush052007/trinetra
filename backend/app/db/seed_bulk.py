@@ -32,11 +32,13 @@ from app.db.models_safety import Incident, SafetyZone  # noqa: E402
 from app.db.seed import (  # noqa: E402
     CORE_CASE_NUMBER,
     WS_CASE_NUMBER,
+    WS2_CASE_NUMBER,
     EntityWriter,
     seed_core_case,
     seed_safety,
     seed_users,
     seed_ws_case,
+    seed_ws_case_secondary,
     write_credentials_file,
 )
 from app.db.session import SessionLocal, create_all, engine  # noqa: E402
@@ -290,6 +292,9 @@ def seed_all(
         log("Seeding case DEMO/WS-2026-0417 (Stalking & Harassment)...")
         ws_case, ws_data = seed_ws_case(db, writer, users["WSO-052"])
 
+        log("Seeding case DEMO/WS-2026-0583 (Coordinated Online Targeting)...")
+        ws2_case, _ = seed_ws_case_secondary(db, writer, users["WSO-052"])
+
         log("Seeding safety zones, services, waypoints, incidents and alerts...")
         seed_safety(db, writer, ws_case, ws_data, users["WSO-052"])
 
@@ -300,6 +305,8 @@ def seed_all(
                          ("AN-331", "Analyst"), ("CFI-188", "Financial Analyst")]),
             (ws_case, [("WSO-052", "Lead Officer"), ("SI-207", "Supervisor"),
                        ("IO-114", "Investigator")]),
+            (ws2_case, [("WSO-052", "Lead Officer"), ("CFI-188", "Cyber Investigator"),
+                        ("SI-207", "Supervisor")]),
         ):
             for service_id, role_on_case in members:
                 db.add(
@@ -315,7 +322,9 @@ def seed_all(
 
         log("Deriving timeline events from case relationships...")
         summary["events"] = (
-            generate_case_events(db, core_case) + generate_case_events(db, ws_case)
+            generate_case_events(db, core_case)
+            + generate_case_events(db, ws_case)
+            + generate_case_events(db, ws2_case)
         )
 
         db.commit()

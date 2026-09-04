@@ -17,6 +17,7 @@ import csv
 import hashlib
 import json
 import sys
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -88,19 +89,55 @@ WS_DAY_ONE = datetime(2026, 1, 5, 9, 0, tzinfo=UTC)
 
 CORE_CASE_NUMBER = "NX-2026-0147"
 WS_CASE_NUMBER = "DEMO/WS-2026-0417"
+WS2_CASE_NUMBER = "DEMO/WS-2026-0583"
+
+# The second Women Safety case runs on its own timeline.
+WS2_DAY_ONE = datetime(2026, 3, 2, 9, 0, tzinfo=UTC)
 
 SOURCE_DIR = PROJECT_ROOT / "database" / "source"
 
 
-def _day_to_date(label: str) -> tuple[datetime | None, str | None]:
-    """Map a 'Day N' or 'Day 1-14' label onto a concrete datetime."""
+@dataclass(frozen=True)
+class WsCaseSpec:
+    """Everything that differs between one Women Safety case file and another.
+
+    `uid_prefix` is not cosmetic: both source files use short identifiers such
+    as V1, S1 and LOC1, so without namespacing the second case would attach to
+    the first case's entities and manufacture links the sources never asserted.
+
+    `identifiers` seeds the hard attributes (id proof, device, phone) that let
+    entity resolution rediscover alias links from evidence rather than from a
+    hardcoded answer - the same way it would against real records.
+    """
+
+    source_file: str
+    case_number: str
+    title: str
+    lead_uid: str
+    day_one: datetime
+    uid_prefix: str = ""
+    evidence_prefix: str = "EV-WS"
+    event_prefix: str = "ws"
+    identifiers: dict[str, dict[str, Any]] = field(default_factory=dict)
+    derivations: dict[str, tuple[list[str], str, str]] = field(default_factory=dict)
+
+
+def _day_to_date(
+    label: str, day_one: datetime | None = None
+) -> tuple[datetime | None, str | None]:
+    """Map a 'Day N' or 'Day 1-14' label onto a concrete datetime.
+
+    Each case anchors its own Day 1, so relative labels from different cases do
+    not collapse onto the same dates on a shared timeline.
+    """
     if not label:
         return None, None
+    anchor = day_one or WS_DAY_ONE
     text = str(label).strip()
     if text.lower().startswith("day"):
         digits = "".join(c if c.isdigit() else " " for c in text[3:]).split()
         if digits:
-            return WS_DAY_ONE + timedelta(days=int(digits[0]) - 1), text
+            return anchor + timedelta(days=int(digits[0]) - 1), text
     if text.isdigit() and len(text) == 4:  # a bare year, e.g. "2024"
         return datetime(int(text), 6, 1, tzinfo=UTC), text
     return None, text
@@ -492,20 +529,31 @@ def seed_core_case(db: Session, writer: EntityWriter, owner: User) -> Case:
 # ============================================================ women safety case
 
 
-def seed_ws_case(db: Session, writer: EntityWriter, owner: User) -> Case:
-    """Case DEMO/WS-2026-0417, loaded verbatim from the source JSON."""
-    source_file = SOURCE_DIR / "TRINETRA_DEMO_WS-2026-0417.json"
-    data = json.loads(source_file.read_text(encoding="utf-8"))
+def _seed_ws_case(
+    db: Session, writer: EntityWriter, owner: User, spec: "WsCaseSpec"
+) -> Case:
+    """Load a Women Safety case verbatim from its source JSON.
+
+    Both demonstration cases reuse short identifiers (V1, S1, LOC1...), so each
+    case namespaces them with `spec.uid_prefix`. Without that the second case
+    would silently attach to the first case's entities and invent connections
+    that the source data does not contain.
+    """
+    data = json.loads((SOURCE_DIR / spec.source_file).read_text(encoding="utf-8"))
+    day_one = spec.day_one
+
+    def uid_of(raw: str) -> str:
+        return f"{spec.uid_prefix}{raw}" if spec.uid_prefix else raw
 
     case = Case(
-        case_number=WS_CASE_NUMBER,
-        title="Stalking & Harassment Investigation",
+        case_number=spec.case_number,
+        title=spec.title,
         description=data["metadata"]["title"] + " - " + data["metadata"]["purpose"],
         status=CaseStatus.UNDER_INVESTIGATION,
         priority=Priority.CRITICAL,
         module="WOMEN_SAFETY",
         owner_id=owner.id,
-        opened_at=WS_DAY_ONE,
+        opened_at=day_one,
     )
     db.add(case)
     db.flush()
@@ -514,16 +562,19 @@ def seed_ws_case(db: Session, writer: EntityWriter, owner: User) -> Case:
         "person": "person", "phone": "phone", "social_handle": "social",
         "vehicle": "vehicle", "transaction": "transaction", "location": "location",
         "event": "event", "case": "case_record",
+        "organization": "organization",
     }
     role_labels = {
         "victim": "Victim",
         "suspect_primary": "Primary Suspect",
         "linked_identity": "Linked Identity",
+        "person_of_interest": "Person of Interest",
         "witness": "Witness",
     }
 
     for item in data["entities"]:
-        uid = item["id"]
+        raw_uid = item["id"]
+        uid = uid_of(raw_uid)
         entity_type = type_map.get(item["type"], item["type"])
         name = item.get("alias") or item.get("value") or item.get("name") or uid
         attributes: dict[str, Any] = {}
@@ -534,14 +585,12 @@ def seed_ws_case(db: Session, writer: EntityWriter, owner: User) -> Case:
         if item.get("name") and item.get("alias"):
             attributes["case_label"] = item["name"]
 
-        # Identifiers that let entity resolution find the S1/S2 alias link the
+        # Identifiers that let entity resolution rediscover the alias links the
         # way it would in a real deployment: through shared hard identifiers,
-        # not through a hardcoded answer.
-        if uid in ("S1", "S2"):
-            attributes["id_proof"] = "IDP-4471"
-            attributes["vehicle"] = "DL0XXX4471"
+        # never through a hardcoded answer.
+        attributes.update(spec.identifiers.get(raw_uid, {}))
 
-        coords = SD.LOCATION_COORDS.get(uid)
+        coords = SD.LOCATION_COORDS.get(raw_uid)
         writer.entity(
             uid, entity_type, name,
             aliases=[item["name"]] if item.get("name") and item.get("alias") else [],
@@ -560,20 +609,20 @@ def seed_ws_case(db: Session, writer: EntityWriter, owner: User) -> Case:
             )
         )
 
-    case.lead_entity_id = writer.by_uid["S1"].id
+    case.lead_entity_id = writer.by_uid[uid_of(spec.lead_uid)].id
 
     # Relationships, preserving the source file's observed/inferred marking.
     rel_rows: dict[str, Relationship] = {}
     evidence_seq = 0
     for item in data["relationships"]:
-        occurred, label = _day_to_date(item.get("time", ""))
+        occurred, label = _day_to_date(item.get("time", ""), day_one)
         status = (
             EvidenceStatus.OBSERVED
             if item["evidence_type"] == "observed"
             else EvidenceStatus.INFERRED
         )
         rel = writer.relationship(
-            item["from"], item["to"], item["relationship"],
+            uid_of(item["from"]), uid_of(item["to"]), item["relationship"],
             source_ref=item.get("source"),
             occurred_at=occurred,
             time_label=label,
@@ -587,15 +636,16 @@ def seed_ws_case(db: Session, writer: EntityWriter, owner: User) -> Case:
         evidence_seq += 1
         db.add(
             Evidence(
-                evidence_ref=f"EV-WS-{evidence_seq:04d}",
+                evidence_ref=f"{spec.evidence_prefix}-{evidence_seq:04d}",
                 source=item.get("source", "Case file"),
                 source_type="FIR" if "FIR" in (item.get("source") or "") else "Records",
                 description=(
-                    f"{writer.by_uid[item['from']].name} - {item['relationship']} - "
-                    f"{writer.by_uid[item['to']].name}"
+                    f"{writer.by_uid[uid_of(item['from'])].name} - "
+                    f"{item['relationship']} - "
+                    f"{writer.by_uid[uid_of(item['to'])].name}"
                 ),
                 occurred_at=occurred,
-                entity_id=writer.by_uid[item["from"]].id,
+                entity_id=writer.by_uid[uid_of(item["from"])].id,
                 relationship_id=rel.id,
                 case_id=case.id,
                 confidence=float(item["confidence"]),
@@ -603,8 +653,58 @@ def seed_ws_case(db: Session, writer: EntityWriter, owner: User) -> Case:
             )
         )
 
-    # Attach derivation chains to the inferred links, referencing the real rows.
-    derivations = {
+    # Attach derivation chains to the inferred links, referencing real rows.
+    derivations = spec.derivations
+    for rel_id, (support_ids, reason, method) in derivations.items():
+        row = rel_rows.get(rel_id)
+        if not row:
+            continue
+        row.derivation = {
+            "reason": reason,
+            "method": method,
+            "supporting_relationship_ids": [
+                rel_rows[s].id for s in support_ids if s in rel_rows
+            ],
+        }
+
+    # Timeline events.
+    for item in data["events"]:
+        occurred, label = _day_to_date(item.get("time", ""), day_one)
+        entity = writer.by_uid.get(uid_of(item.get("entity", "")))
+        location = writer.by_uid.get(uid_of(item.get("location", "")))
+        db.add(
+            Event(
+                uid=f"{spec.event_prefix}-{item['event_id']}",
+                type=item["type"],
+                title=item["description"][:180],
+                description=item["description"],
+                occurred_at=occurred,
+                time_label=label,
+                entity_id=entity.id if entity else None,
+                location_id=location.id if location else None,
+                case_id=case.id,
+            )
+        )
+    return case, data
+
+
+WS_CASE_SPEC = WsCaseSpec(
+    source_file="TRINETRA_DEMO_WS-2026-0417.json",
+    case_number=WS_CASE_NUMBER,
+    title="Stalking & Harassment Investigation",
+    lead_uid="S1",
+    day_one=WS_DAY_ONE,
+    uid_prefix="",
+    evidence_prefix="EV-WS",
+    event_prefix="ws",
+    identifiers={
+        # S1 and S2 are the same person under two names. The shared ID proof
+        # and vehicle registration are what entity resolution actually matches
+        # on, so the 0.86 confidence is derived, not asserted.
+        "S1": {"id_proof": "IDP-4471", "vehicle": "DL0XXX4471"},
+        "S2": {"id_proof": "IDP-4471", "vehicle": "DL0XXX4471"},
+    },
+    derivations={
         "R003": (
             ["R004", "R005"],
             "PH2 (+91-70xxxx4482) is unregistered. Call-pattern correlation with S1's "
@@ -627,38 +727,95 @@ def seed_ws_case(db: Session, writer: EntityWriter, owner: User) -> Case:
             "Lower-confidence candidate link, pending corroboration.",
             "platform metadata correlation",
         ),
-    }
-    for rel_id, (support_ids, reason, method) in derivations.items():
-        row = rel_rows.get(rel_id)
-        if not row:
-            continue
-        row.derivation = {
-            "reason": reason,
-            "method": method,
-            "supporting_relationship_ids": [
-                rel_rows[s].id for s in support_ids if s in rel_rows
-            ],
-        }
+    },
+)
 
-    # Timeline events.
-    for item in data["events"]:
-        occurred, label = _day_to_date(item.get("time", ""))
-        entity = writer.by_uid.get(item.get("entity", ""))
-        location = writer.by_uid.get(item.get("location", ""))
-        db.add(
-            Event(
-                uid=f"ws-{item['event_id']}",
-                type=item["type"],
-                title=item["description"][:180],
-                description=item["description"],
-                occurred_at=occurred,
-                time_label=label,
-                entity_id=entity.id if entity else None,
-                location_id=location.id if location else None,
-                case_id=case.id,
-            )
-        )
-    return case, data
+WS2_CASE_SPEC = WsCaseSpec(
+    source_file="TRINETRA_DEMO_WS-2026-0583.json",
+    case_number=WS2_CASE_NUMBER,
+    title="Coordinated Online Targeting Investigation",
+    lead_uid="S1",
+    day_one=WS2_DAY_ONE,
+    uid_prefix="c583-",
+    evidence_prefix="EV-CY",
+    event_prefix="cy",
+    identifiers={
+        # This case has no vehicle or physical identifier. The operator is
+        # reachable only through digital ones, which is what makes it a useful
+        # second test: resolution has to work on device and registration
+        # metadata rather than on names.
+        "SOC1": {"phone": "+91-70xxxx2288", "device_id": "IMEI-3598-4471"},
+        "SOC2": {"phone": "+91-70xxxx2288", "device_id": "IMEI-3598-4471"},
+        # SOC3 shares only the device, so it must score lower than SOC1/SOC2.
+        "SOC3": {"device_id": "IMEI-3598-4471"},
+        "REPO1": {"device_id": "IMEI-3598-4471"},
+        "S1": {"id_proof": "IDP-7310", "phone": "+91-99xxxx7310"},
+        "S2": {"id_proof": "IDP-7310"},
+        # S3 deliberately shares nothing. A payment-adjacent person must not
+        # reach an actionable score on proximity alone.
+        "S3": {},
+    },
+    derivations={
+        "R023": (
+            ["R014", "R008"],
+            "PH2 is unregistered but appears as the recovery number on both promotion "
+            "handles, and the hosting payment's KYC identity matches S1. Probable use "
+            "by S1 - a candidate lead, not a subscriber record.",
+            "recovery-number correlation + hosting KYC match",
+        ),
+        "R024": (
+            ["R014", "R016", "R008"],
+            "SOC1 is registered to PH2 and accessed from device DEV1, and the hosting "
+            "payment behind the site resolves to S1 by KYC. Together these indicate "
+            "probable operation of the handle by S1.",
+            "shared registration number + device identifier + payment KYC",
+        ),
+        "R025": (
+            ["R014", "R015", "R016"],
+            "SOC1 and SOC2 share both a registration number and a device identifier. "
+            "Two independent hard identifiers make a common operator likely.",
+            "entity resolution (registration number + device identifier)",
+        ),
+        "R026": (
+            ["R016", "R017"],
+            "SOC3 shares only the device identifier with SOC1 - no shared registration "
+            "number. A single shared identifier supports the link but does not "
+            "establish it; scored lower and left for review.",
+            "entity resolution (device identifier only)",
+        ),
+        "R027": (
+            ["R020", "R008"],
+            "Entity resolution matched the operator identity to a prior cyber-harassment "
+            "matter in another state through a shared ID-proof reference. Links two case "
+            "files that no single jurisdiction held together.",
+            "entity resolution (cross-state identifier match)",
+        ),
+        "R028": (
+            ["R022"],
+            "S3's account paid for the domain registration. That is proximity to the "
+            "infrastructure, not participation in the offence: no device, handle or "
+            "contact association exists. Deliberately low confidence and not "
+            "actionable without corroboration.",
+            "payment-instrument proximity only",
+        ),
+    },
+)
+
+
+def seed_ws_case(db: Session, writer: EntityWriter, owner: User) -> Case:
+    """Case DEMO/WS-2026-0417 - single-victim stalking and harassment."""
+    return _seed_ws_case(db, writer, owner, WS_CASE_SPEC)
+
+
+def seed_ws_case_secondary(db: Session, writer: EntityWriter, owner: User) -> Case:
+    """Case DEMO/WS-2026-0583 - multi-victim coordinated online targeting.
+
+    Exercises what the first case cannot: several complainants filing through
+    different channels, resolution across anonymous handles on digital
+    identifiers alone, a financial trail through hosting and domain payments,
+    and a low-confidence guard for a payment-adjacent person.
+    """
+    return _seed_ws_case(db, writer, owner, WS2_CASE_SPEC)
 
 
 # ============================================================ safety data

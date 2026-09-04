@@ -1,0 +1,802 @@
+{
+  "case_id": "DEMO/WS-2026-0583",
+  "status": "synthetic_demo_only",
+  "metadata": {
+    "title": "Coordinated Online Targeting and Doxxing of Women",
+    "data_classification": "Synthetic / fictional",
+    "purpose": "Second demonstration case. Exercises capabilities the stalking case does not: multi-victim aggregation, entity resolution across anonymous social handles, digital-infrastructure and payment trails, and cross-case repeat-pattern linkage.",
+    "provenance": "Entirely fictional. Every person, handle, number, payment reference and domain below is invented for testing. No real individual, platform, investigation or case is represented, and nothing here is derived from any real reported matter.",
+    "why_this_pattern": "App- and web-based coordinated targeting of women is a recognised category of cyber-harassment in India. This case models the general structure of that offence category - anonymous operator accounts, shared hosting infrastructure, a payment trail, and multiple complainants filing separately - so the platform can be tested against a multi-victim digital case rather than a single-victim physical one."
+  },
+  "entities": [
+    {
+      "id": "V1",
+      "type": "person",
+      "role": "victim",
+      "alias": "Complainant A",
+      "name": "Complainant A",
+      "source": "FIR DEMO/CY-2026-0583"
+    },
+    {
+      "id": "V2",
+      "type": "person",
+      "role": "victim",
+      "alias": "Complainant B",
+      "name": "Complainant B",
+      "source": "FIR filed at second station"
+    },
+    {
+      "id": "V3",
+      "type": "person",
+      "role": "victim",
+      "alias": "Complainant C",
+      "name": "Complainant C",
+      "source": "Cybercrime portal complaint"
+    },
+    {
+      "id": "V4",
+      "type": "person",
+      "role": "victim",
+      "alias": "Complainant D",
+      "name": "Complainant D",
+      "source": "Cybercrime portal complaint"
+    },
+    {
+      "id": "S1",
+      "type": "person",
+      "role": "suspect_primary",
+      "alias": "Operator S1",
+      "name": "Operator S1",
+      "source": "Hosting KYC; entity resolution"
+    },
+    {
+      "id": "S2",
+      "type": "person",
+      "role": "linked_identity",
+      "alias": "Prior identity S2",
+      "name": "Prior Identity S2",
+      "source": "Prior cyber-harassment FIR, 2025"
+    },
+    {
+      "id": "S3",
+      "type": "person",
+      "role": "person_of_interest",
+      "alias": "Associate S3",
+      "name": "Associate S3",
+      "source": "Payment record; requires verification"
+    },
+    {
+      "id": "W1",
+      "type": "person",
+      "role": "witness",
+      "alias": "Reporting volunteer W1",
+      "name": "Reporting Volunteer W1",
+      "source": "Voluntary statement"
+    },
+    {
+      "id": "SOC1",
+      "type": "social_handle",
+      "value": "@promo_hdl_8821",
+      "source": "Platform metadata, authorised request"
+    },
+    {
+      "id": "SOC2",
+      "type": "social_handle",
+      "value": "@promo_hdl_4417",
+      "source": "Platform metadata, authorised request"
+    },
+    {
+      "id": "SOC3",
+      "type": "social_handle",
+      "value": "@mirror_hdl_9002",
+      "source": "Platform metadata, authorised request"
+    },
+    {
+      "id": "PH1",
+      "type": "phone",
+      "value": "+91-99xxxx7310",
+      "registered": true,
+      "source": "Telecom subscriber record"
+    },
+    {
+      "id": "PH2",
+      "type": "phone",
+      "value": "+91-70xxxx2288",
+      "registered": false,
+      "source": "Account recovery metadata"
+    },
+    {
+      "id": "DEV1",
+      "type": "phone",
+      "value": "IMEI 3598xxxxxx4471",
+      "registered": false,
+      "source": "Device identifier in platform metadata"
+    },
+    {
+      "id": "DOM1",
+      "type": "organization",
+      "value": "demo-listing-site.example",
+      "source": "Domain registration record"
+    },
+    {
+      "id": "HOST1",
+      "type": "organization",
+      "value": "Demo Cloud Hosting Pvt. Ltd.",
+      "source": "Hosting provider KYC"
+    },
+    {
+      "id": "REPO1",
+      "type": "organization",
+      "value": "Demo Code Repository Account",
+      "source": "Repository metadata, authorised request"
+    },
+    {
+      "id": "TXN1",
+      "type": "transaction",
+      "value": "Rs 4,200 hosting payment",
+      "source": "Payment gateway record"
+    },
+    {
+      "id": "TXN2",
+      "type": "transaction",
+      "value": "Rs 1,150 domain registration",
+      "source": "Registrar payment record"
+    },
+    {
+      "id": "LOC1",
+      "type": "location",
+      "value": "Complaint station, South District",
+      "source": "FIR record"
+    },
+    {
+      "id": "LOC2",
+      "type": "location",
+      "value": "Complaint station, East District",
+      "source": "FIR record"
+    },
+    {
+      "id": "LOC3",
+      "type": "location",
+      "value": "Cybercrime reporting portal (online)",
+      "source": "Portal record"
+    },
+    {
+      "id": "EVT1",
+      "type": "event",
+      "value": "Listing site goes live, Day 1",
+      "source": "Archived page metadata"
+    },
+    {
+      "id": "EVT2",
+      "type": "event",
+      "value": "Coordinated amplification, Day 3",
+      "source": "Platform metadata"
+    },
+    {
+      "id": "EVT3",
+      "type": "event",
+      "value": "Takedown and preservation request, Day 9",
+      "source": "Case record"
+    },
+    {
+      "id": "CASE_PRIOR",
+      "type": "case",
+      "value": "Prior cyber-harassment FIR, other state, 2025",
+      "source": "Cross-state FIR database"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "R001",
+      "from": "V1",
+      "relationship": "complaint_filed_against",
+      "to": "DOM1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 2",
+      "source": "FIR DEMO/CY-2026-0583"
+    },
+    {
+      "id": "R002",
+      "from": "V2",
+      "relationship": "complaint_filed_against",
+      "to": "DOM1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 4",
+      "source": "FIR, East District"
+    },
+    {
+      "id": "R003",
+      "from": "V3",
+      "relationship": "complaint_filed_against",
+      "to": "DOM1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 5",
+      "source": "Cybercrime portal"
+    },
+    {
+      "id": "R004",
+      "from": "V4",
+      "relationship": "complaint_filed_against",
+      "to": "DOM1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 6",
+      "source": "Cybercrime portal"
+    },
+    {
+      "id": "R005",
+      "from": "DOM1",
+      "relationship": "hosted_by",
+      "to": "HOST1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 1",
+      "source": "Hosting provider record"
+    },
+    {
+      "id": "R006",
+      "from": "TXN1",
+      "relationship": "paid_for",
+      "to": "HOST1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 1",
+      "source": "Payment gateway record"
+    },
+    {
+      "id": "R007",
+      "from": "TXN2",
+      "relationship": "paid_for",
+      "to": "DOM1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 1",
+      "source": "Registrar payment record"
+    },
+    {
+      "id": "R008",
+      "from": "TXN1",
+      "relationship": "id_proof_matches",
+      "to": "S1",
+      "evidence_type": "observed",
+      "confidence": 0.94,
+      "time": "Day 11",
+      "source": "Hosting provider KYC"
+    },
+    {
+      "id": "R009",
+      "from": "S1",
+      "relationship": "registered_owner_of",
+      "to": "PH1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 11",
+      "source": "Telecom subscriber record"
+    },
+    {
+      "id": "R010",
+      "from": "SOC1",
+      "relationship": "sent_messages_to",
+      "to": "V1",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 2-6",
+      "source": "Platform metadata"
+    },
+    {
+      "id": "R011",
+      "from": "SOC1",
+      "relationship": "sent_messages_to",
+      "to": "V2",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 4-6",
+      "source": "Platform metadata"
+    },
+    {
+      "id": "R012",
+      "from": "SOC2",
+      "relationship": "sent_messages_to",
+      "to": "V3",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 5",
+      "source": "Platform metadata"
+    },
+    {
+      "id": "R013",
+      "from": "SOC2",
+      "relationship": "sent_messages_to",
+      "to": "V4",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 6",
+      "source": "Platform metadata"
+    },
+    {
+      "id": "R014",
+      "from": "SOC1",
+      "relationship": "registered_using",
+      "to": "PH2",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 1",
+      "source": "Platform account metadata"
+    },
+    {
+      "id": "R015",
+      "from": "SOC2",
+      "relationship": "registered_using",
+      "to": "PH2",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 1",
+      "source": "Platform account metadata"
+    },
+    {
+      "id": "R016",
+      "from": "SOC1",
+      "relationship": "accessed_from_device",
+      "to": "DEV1",
+      "evidence_type": "observed",
+      "confidence": 0.92,
+      "time": "Day 1-9",
+      "source": "Platform session metadata"
+    },
+    {
+      "id": "R017",
+      "from": "SOC3",
+      "relationship": "accessed_from_device",
+      "to": "DEV1",
+      "evidence_type": "observed",
+      "confidence": 0.88,
+      "time": "Day 7-9",
+      "source": "Platform session metadata"
+    },
+    {
+      "id": "R018",
+      "from": "REPO1",
+      "relationship": "accessed_from_device",
+      "to": "DEV1",
+      "evidence_type": "observed",
+      "confidence": 0.85,
+      "time": "Day 1",
+      "source": "Repository access metadata"
+    },
+    {
+      "id": "R019",
+      "from": "REPO1",
+      "relationship": "published",
+      "to": "DOM1",
+      "evidence_type": "observed",
+      "confidence": 0.9,
+      "time": "Day 1",
+      "source": "Deployment record"
+    },
+    {
+      "id": "R020",
+      "from": "S2",
+      "relationship": "named_accused_in",
+      "to": "CASE_PRIOR",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "2025",
+      "source": "Prior FIR"
+    },
+    {
+      "id": "R021",
+      "from": "W1",
+      "relationship": "witnessed",
+      "to": "EVT2",
+      "evidence_type": "observed",
+      "confidence": 1.0,
+      "time": "Day 3",
+      "source": "Voluntary statement"
+    },
+    {
+      "id": "R022",
+      "from": "TXN2",
+      "relationship": "paid_by_account_of",
+      "to": "S3",
+      "evidence_type": "observed",
+      "confidence": 0.8,
+      "time": "Day 1",
+      "source": "Registrar payment record"
+    },
+    {
+      "id": "R023",
+      "from": "S1",
+      "relationship": "believed_to_use",
+      "to": "PH2",
+      "evidence_type": "inferred",
+      "confidence": 0.81,
+      "time": "Day 11",
+      "source": "Derived: recovery-number correlation with registered number and hosting KYC"
+    },
+    {
+      "id": "R024",
+      "from": "S1",
+      "relationship": "believed_to_operate",
+      "to": "SOC1",
+      "evidence_type": "inferred",
+      "confidence": 0.76,
+      "time": "Day 11",
+      "source": "Derived: shared registration number and device identifier"
+    },
+    {
+      "id": "R025",
+      "from": "SOC1",
+      "relationship": "alias_of",
+      "to": "SOC2",
+      "evidence_type": "inferred",
+      "confidence": 0.89,
+      "time": "Day 10",
+      "source": "Derived: identical registration number and device identifier"
+    },
+    {
+      "id": "R026",
+      "from": "SOC1",
+      "relationship": "alias_of",
+      "to": "SOC3",
+      "evidence_type": "inferred",
+      "confidence": 0.72,
+      "time": "Day 10",
+      "source": "Derived: shared device identifier, no shared registration number"
+    },
+    {
+      "id": "R027",
+      "from": "S1",
+      "relationship": "alias_of",
+      "to": "S2",
+      "evidence_type": "inferred",
+      "confidence": 0.84,
+      "time": "Day 12",
+      "source": "Derived: entity resolution against prior cross-state FIR"
+    },
+    {
+      "id": "R028",
+      "from": "S3",
+      "relationship": "linked_by_metadata_to",
+      "to": "S1",
+      "evidence_type": "inferred",
+      "confidence": 0.63,
+      "time": "Day 12",
+      "source": "Derived: payment-instrument proximity only; low confidence, corroboration required"
+    }
+  ],
+  "incidents": [
+    {
+      "incident_id": "WSI-101",
+      "case_id": "DEMO/WS-2026-0583",
+      "type": "harassment",
+      "time": "Day 2",
+      "location": "LOC1",
+      "priority": "HIGH",
+      "status": "open",
+      "subject_entity": "V1",
+      "description": "Complainant reports photographs republished without consent on a public listing site, accompanied by abusive commentary."
+    },
+    {
+      "incident_id": "WSI-102",
+      "case_id": "DEMO/WS-2026-0583",
+      "type": "harassment",
+      "time": "Day 4",
+      "location": "LOC2",
+      "priority": "HIGH",
+      "status": "open",
+      "subject_entity": "V2",
+      "description": "Second complainant reports the same listing site at a different police station. No link made at time of filing."
+    },
+    {
+      "incident_id": "WSI-103",
+      "case_id": "DEMO/WS-2026-0583",
+      "type": "threat",
+      "time": "Day 5",
+      "location": "LOC3",
+      "priority": "HIGH",
+      "status": "investigating",
+      "subject_entity": "V3",
+      "description": "Complainant reports threatening direct messages following the listing."
+    },
+    {
+      "incident_id": "WSI-104",
+      "case_id": "DEMO/WS-2026-0583",
+      "type": "threat",
+      "time": "Day 6",
+      "location": "LOC3",
+      "priority": "CRITICAL",
+      "status": "escalated",
+      "subject_entity": "V4",
+      "description": "Complainant reports threats naming her workplace and daily routine."
+    },
+    {
+      "incident_id": "WSI-105",
+      "case_id": "DEMO/WS-2026-0583",
+      "type": "suspicious_contact",
+      "time": "Day 3",
+      "location": "LOC3",
+      "priority": "MEDIUM",
+      "status": "review",
+      "subject_entity": "V1",
+      "description": "Coordinated amplification of the listing across multiple accounts within a short window."
+    },
+    {
+      "incident_id": "WSI-106",
+      "case_id": "DEMO/WS-2026-0583",
+      "type": "suspicious_contact",
+      "time": "Day 7",
+      "location": "LOC3",
+      "priority": "MEDIUM",
+      "status": "review",
+      "subject_entity": "V2",
+      "description": "Mirror account reposts the listing after the original is reported."
+    },
+    {
+      "incident_id": "WSI-107",
+      "case_id": "CASE_PRIOR",
+      "type": "harassment",
+      "time": "2025",
+      "location": "OTHER_STATE",
+      "priority": "HIGH",
+      "status": "historical",
+      "subject_entity": "S2",
+      "description": "Prior cyber-harassment matter in another state, linked here through entity resolution."
+    }
+  ],
+  "events": [
+    {
+      "event_id": "E101",
+      "time": "Day 1",
+      "entity": "DOM1",
+      "type": "infrastructure",
+      "location": "system",
+      "description": "Listing site published; domain registered and hosting paid the same day."
+    },
+    {
+      "event_id": "E102",
+      "time": "Day 1",
+      "entity": "REPO1",
+      "type": "infrastructure",
+      "location": "system",
+      "description": "Source published from a repository account accessed by device DEV1."
+    },
+    {
+      "event_id": "E103",
+      "time": "Day 2",
+      "entity": "V1",
+      "type": "complaint",
+      "location": "LOC1",
+      "description": "First complaint filed, South District."
+    },
+    {
+      "event_id": "E104",
+      "time": "Day 3",
+      "entity": "EVT2",
+      "type": "amplification",
+      "location": "LOC3",
+      "description": "Coordinated amplification observed across promotion handles."
+    },
+    {
+      "event_id": "E105",
+      "time": "Day 4",
+      "entity": "V2",
+      "type": "complaint",
+      "location": "LOC2",
+      "description": "Second complaint filed at a different station. Not linked at filing time."
+    },
+    {
+      "event_id": "E106",
+      "time": "Day 5",
+      "entity": "V3",
+      "type": "complaint",
+      "location": "LOC3",
+      "description": "Third complaint via cybercrime portal, includes threat messages."
+    },
+    {
+      "event_id": "E107",
+      "time": "Day 6",
+      "entity": "V4",
+      "type": "complaint",
+      "location": "LOC3",
+      "description": "Fourth complaint; threats reference workplace and routine. Case escalated."
+    },
+    {
+      "event_id": "E108",
+      "time": "Day 7",
+      "entity": "SOC3",
+      "type": "communication",
+      "location": "system",
+      "description": "Mirror handle reposts listing from the same device identifier."
+    },
+    {
+      "event_id": "E109",
+      "time": "Day 9",
+      "entity": "EVT3",
+      "type": "takedown",
+      "location": "system",
+      "description": "Takedown and evidence-preservation request issued."
+    },
+    {
+      "event_id": "E110",
+      "time": "Day 10",
+      "entity": "SOC1",
+      "type": "entity_resolution",
+      "location": "system",
+      "description": "Promotion handles resolved as probable aliases on shared registration number and device."
+    },
+    {
+      "event_id": "E111",
+      "time": "Day 11",
+      "entity": "TXN1",
+      "type": "financial_link",
+      "location": "system",
+      "description": "Hosting payment KYC matched to S1."
+    },
+    {
+      "event_id": "E112",
+      "time": "Day 12",
+      "entity": "S1",
+      "type": "entity_resolution",
+      "location": "system",
+      "description": "S1 linked to prior cross-state identity S2 at 0.84 confidence. Pending validation."
+    }
+  ],
+  "risk_analysis": [
+    {
+      "entity": "S1",
+      "score": 0.88,
+      "level": "HIGH",
+      "reason": "Hosting KYC match, device identifier shared across three promotion handles, four separate complainants, prior-identity link pending validation.",
+      "status": "inferred/analytical"
+    },
+    {
+      "entity": "DEV1",
+      "score": 0.79,
+      "level": "HIGH",
+      "reason": "Single device identifier links the repository account and all three promotion handles.",
+      "status": "analytical"
+    },
+    {
+      "entity": "SOC1",
+      "score": 0.74,
+      "level": "HIGH",
+      "reason": "Contacted two complainants directly; shares registration number and device with a second handle.",
+      "status": "analytical"
+    },
+    {
+      "entity": "S2",
+      "score": 0.66,
+      "level": "MEDIUM",
+      "reason": "Prior cyber-harassment matter; linked to S1 by entity resolution at 0.84.",
+      "status": "inferred/analytical"
+    },
+    {
+      "entity": "S3",
+      "score": 0.41,
+      "level": "MEDIUM",
+      "reason": "Domain payment instrument only. No device, handle or contact association. Corroboration required before any action.",
+      "status": "inferred/analytical"
+    }
+  ],
+  "alerts": [
+    {
+      "alert_id": "A101",
+      "priority": "CRITICAL",
+      "module": "Women Safety",
+      "message": "Four complainants across three reporting channels reference the same listing site",
+      "time": "Day 6",
+      "status": "ESCALATED"
+    },
+    {
+      "alert_id": "A102",
+      "priority": "HIGH",
+      "module": "Women Safety",
+      "message": "Threats naming a complainant's workplace and daily routine",
+      "time": "Day 6",
+      "status": "UNDER_REVIEW"
+    },
+    {
+      "alert_id": "A103",
+      "priority": "HIGH",
+      "module": "Network",
+      "message": "Three promotion handles converge on a single device identifier",
+      "time": "Day 10",
+      "status": "PENDING_VALIDATION"
+    },
+    {
+      "alert_id": "A104",
+      "priority": "HIGH",
+      "module": "Network",
+      "message": "Possible repeat pattern: S1 linked to a 2025 cross-state matter",
+      "time": "Day 12",
+      "status": "PENDING_VALIDATION"
+    },
+    {
+      "alert_id": "A105",
+      "priority": "MEDIUM",
+      "module": "Network",
+      "message": "Low-confidence payment-only association for S3; not actionable without corroboration",
+      "time": "Day 12",
+      "status": "UNDER_REVIEW"
+    }
+  ],
+  "safety_zones": [
+    {
+      "zone_id": "ZONE-01",
+      "area": "South District complaint catchment",
+      "color": "YELLOW",
+      "interpretation": "Moderate demo reporting density",
+      "data_type": "Synthetic"
+    },
+    {
+      "zone_id": "ZONE-02",
+      "area": "East District complaint catchment",
+      "color": "YELLOW",
+      "interpretation": "Moderate demo reporting density",
+      "data_type": "Synthetic"
+    }
+  ],
+  "safe_routes": [],
+  "emergency_services": [
+    {
+      "service_id": "ES-010",
+      "type": "Cyber Cell",
+      "name": "Demo Cyber Crime Cell",
+      "area": "ZONE-01",
+      "status": "AVAILABLE"
+    },
+    {
+      "service_id": "ES-011",
+      "type": "Emergency Response Unit",
+      "name": "Demo Women Safety Response Unit",
+      "area": "ZONE-02",
+      "status": "AVAILABLE"
+    }
+  ],
+  "sos": {
+    "alert_id": "SOS-WS-0002",
+    "case_id": "DEMO/WS-2026-0583",
+    "status_flow": [
+      "RECEIVED",
+      "ASSIGNED",
+      "RESPONDING",
+      "RESOLVED"
+    ],
+    "current_status": "RESPONDING",
+    "location": "Simulated position near LOC2",
+    "contacts": [
+      "Emergency Contact 1",
+      "Emergency Contact 2"
+    ],
+    "response_unit": "Demo Women Safety Response Unit",
+    "note": "Synthetic SOS raised by complainant V4 after threats referencing her routine. Platform workflow only; no emergency dispatch is performed."
+  },
+  "testing_notes": {
+    "capabilities_exercised": [
+      "Multi-victim aggregation: four complainants filing through three separate channels, deliberately unlinked at filing time",
+      "Entity resolution across anonymous handles using shared registration number and device identifier rather than name similarity",
+      "Identifier-strength scoring: SOC1/SOC2 share both number and device (0.89), SOC1/SOC3 share device only (0.72)",
+      "Financial trail: hosting and domain payments resolving to an identity through KYC",
+      "Cross-case repeat-pattern linkage to a prior matter in another state",
+      "Low-confidence guard: S3 is payment-adjacent only and must not reach an actionable band"
+    ],
+    "expected_behaviour": [
+      "S3 must stay below an actionable band and be labelled as requiring corroboration",
+      "S1 must land in a higher priority band than S3, on the strength of device, handle and payment associations that S3 does not have",
+      "All 'believed_to_*' and 'alias_of' relationships must persist as INFERRED with a derivation chain until an investigator validates them",
+      "SOC1/SOC2, sharing both a registration number and a device, must score measurably above SOC1/SOC3, which share only a device",
+      "The four complaints should surface as one connected pattern, not four separate cases"
+    ],
+    "measured": {
+      "note": "Observed on the seeded database, for regression comparison.",
+      "alias_confidence_SOC1_SOC2": 0.89,
+      "alias_confidence_SOC1_SOC3": 0.72,
+      "priority_S1": "35.4 (MEDIUM)",
+      "priority_S3": "25.3 (LOW)",
+      "inferred_relationships_pending_validation": 6
+    }
+  }
+}

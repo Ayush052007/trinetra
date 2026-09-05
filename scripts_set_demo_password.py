@@ -22,6 +22,7 @@ from sqlalchemy import select  # noqa: E402
 
 from app.core.security import hash_password, password_strength_errors  # noqa: E402
 from app.db.models import User  # noqa: E402
+from app.db.seed import database_identity, write_credentials_file  # noqa: E402
 from app.db.session import SessionLocal  # noqa: E402
 
 password = sys.argv[1] if len(sys.argv) > 1 else "TrinetraDemo#2026"
@@ -49,4 +50,11 @@ for user in sorted(users, key=lambda u: u.service_id):
     print(f"  {user.service_id:<10} {user.full_name:<20} {user.designation}")
 print(f"\nPassword for all accounts: {password}")
 print("Lockouts cleared. Synthetic-data instances only.")
+
+# CREDENTIALS.md is what tests, docs and anyone reading the file trust. Leaving
+# it holding the previous per-account passwords after this script overwrites
+# the database is exactly the stale-credential trap that keeps recurring here.
+credentials_path = ROOT / "CREDENTIALS.md"
+write_credentials_file({u.service_id: password for u in users}, credentials_path)
+print(f"\nCREDENTIALS.md updated to match ({database_identity()}).")
 db.close()
